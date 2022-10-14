@@ -1,0 +1,51 @@
+            /* No es responsive pero a futuro lo sera */
+
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    box-sizing: border-box; 
+}
+
+.batalla{
+    
+}
+.fondo{
+    width: 99.96%;
+    height: auto;
+    position: absolute;
+    left: 1px;
+}
+.vida-enemigo{
+    height: 100px;
+    width: auto;
+    position: absolute;
+    top: 10%;
+    left: 80%;
+}
+.pokemon-enemigo{
+    position: absolute;
+    width: 60%;
+    height: auto;
+    left: 40%;
+    top: 30%;
+}
+.decidueye{
+    width: 14%;
+}
+.vida-aliada{
+    height: 100px;
+    width: auto;
+    position: absolute;
+    top: 35%;
+}
+.pokemon-aliado{
+    position: absolute;
+    width: auto;
+    height: 60%;
+    right: 55%;
+    top: 30%;
+}
+.charizard{
+    width: 500%;
+}
