@@ -1,11 +1,57 @@
 alert("Choose your pokemon");
 
-// Funcion aleatoria, recibe el menor numero y el mayor
-function getRandomIntInclusive(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1) + min);
+// Crear ataques
+function Movimiento(category, name, power, presition, type, effect, pp){
+    this.category = category;
+    this.name = name;
+    this.power = power;
+    this.presition = presition;
+    this.type = type;
+    this.effect = effect;
+    this.pp = pp;
 }
+
+// Ataques
+var AirSlash = new Movimiento("Special", "AirSlash", 75, 95, "flying", "flinch", 15);
+var Flamethrower = new Movimiento("Special", "Flamethrower", 90, 100, "fire", "burn", 15);
+var FireFang = new Movimiento("Physical", "FireFang", 65, 95, "fire", "flinch-burn", 15);
+var HyperBeam = new Movimiento("Special", "HyperBeam", 150, 0, "fire", "loseturn", 5); //0% de acertar porque de momento solo se usa contra un fantasma
+var SpiritShackle = new Movimiento("Physical", "SpiritShackle", 80, 100, "ghost", "noswitch", 10);
+
+//falta por poner valores correctos xd
+var Earthquake = new Movimiento("Physical", "SpiritShackle", 80, 100, "ghost", "noswitch", 10);
+var BodyPress = new Movimiento("Physical", "SpiritShackle", 80, 100, "ghost", "noswitch", 10);  
+var FlareBlitz = new Movimiento("Physical", "SpiritShackle", 80, 100, "ghost", "noswitch", 10);
+var DragonDance = new Movimiento("Physical", "SpiritShackle", 80, 100, "ghost", "noswitch", 10); 
+var Liquidation = new Movimiento("Physical", "SpiritShackle", 80, 100, "ghost", "noswitch", 10); 
+var Crunch = new Movimiento("Physical", "SpiritShackle", 80, 100, "ghost", "noswitch", 10);
+var FlareBlitz = new Movimiento("Physical", "SpiritShackle", 80, 100, "ghost", "noswitch", 10); 
+var LowKick = new Movimiento("Physical", "SpiritShackle", 80, 100, "ghost", "noswitch", 10); 
+var SwordsDance = new Movimiento("Physical", "SpiritShackle", 80, 100, "ghost", "noswitch", 10); 
+var Protect = new Movimiento("Physical", "SpiritShackle", 80, 100, "ghost", "noswitch", 10);
+var DragonDance = new Movimiento("Physical", "SpiritShackle", 80, 100, "ghost", "noswitch", 10); 
+var DoubleEdge = new Movimiento("Physical", "SpiritShackle", 80, 100, "ghost", "noswitch", 10); 
+var Roost = new Movimiento("Physical", "SpiritShackle", 80, 100, "ghost", "noswitch", 10); 
+var Facade = new Movimiento("Physical", "SpiritShackle", 80, 100, "ghost", "noswitch", 10);
+var TriAttack = new Movimiento("Physical", "SpiritShackle", 80, 100, "ghost", "noswitch", 10); 
+var ShadowBall = new Movimiento("Physical", "SpiritShackle", 80, 100, "ghost", "noswitch", 10); 
+var Discharge = new Movimiento("Physical", "SpiritShackle", 80, 100, "ghost", "noswitch", 10);  
+var IceBeam = new Movimiento("Physical", "SpiritShackle", 80, 100, "ghost", "noswitch", 10);
+var FirePunch = new Movimiento("Physical", "SpiritShackle", 80, 100, "ghost", "noswitch", 10); 
+var WildCharge = new Movimiento("Physical", "SpiritShackle", 80, 100, "ghost", "noswitch", 10);  
+var IcePunch = new Movimiento("Physical", "SpiritShackle", 80, 100, "ghost", "noswitch", 10);
+var LeafStorm = new Movimiento("Physical", "SpiritShackle", 80, 100, "ghost", "noswitch", 10); 
+var HiddenPowerFire = new Movimiento("Physical", "SpiritShackle", 80, 100, "ghost", "noswitch", 10); 
+var Substitute = new Movimiento("Physical", "SpiritShackle", 80, 100, "ghost", "noswitch", 10);  
+var Glare = new Movimiento("Physical", "SpiritShackle", 80, 100, "ghost", "noswitch", 10);
+var IceBeam = new Movimiento("Physical", "SpiritShackle", 80, 100, "ghost", "noswitch", 10); 
+var DarkPulse = new Movimiento("Physical", "SpiritShackle", 80, 100, "ghost", "noswitch", 10); 
+var GunkShot = new Movimiento("Physical", "SpiritShackle", 80, 100, "ghost", "noswitch", 10);  
+var WaterShuriken = new Movimiento("Physical", "SpiritShackle", 80, 100, "ghost", "noswitch", 10);
+var Poltergeist = new Movimiento("Physical", "SpiritShackle", 80, 100, "ghost", "noswitch", 10);
+var LeafBlade = new Movimiento("Physical", "SpiritShackle", 80, 100, "ghost", "noswitch", 10); 
+var SpiritShackle = new Movimiento("Physical", "SpiritShackle", 80, 100, "ghost", "noswitch", 10); 
+var ShadowSneak = new Movimiento("Physical", "SpiritShackle", 80, 100, "ghost", "noswitch", 10);
 
 // Crear objetos pokemon
 function Pokemon(pokedex, name, alive, stat, type1, type2, ability, lvl, hp, atk, def, satk, sdef, spd, mov1, mov2, mov3, mov4, obj){
@@ -30,6 +76,67 @@ function Pokemon(pokedex, name, alive, stat, type1, type2, ability, lvl, hp, atk
     this.obj = obj;
 }
 
+// Pokemon jugables
+var GDarmanitan = new Pokemon(000, "Darmanitan (Galar)", true, "ok", "ice", "none", "GorillaTactics", 100, 351, 379, 146, 86, 146, 317, Earthquake, BodyPress, IcePunch, FlareBlitz, "none");
+var Charizard = new Pokemon(006, "Charizard", true, "ok", "fire", "flying", "Blaze", 100, 297, 183, 192, 317, 207, 328, AirSlash, Flamethrower, FireFang,  HyperBeam, "none");
+var Feraligatr = new Pokemon(160, "Feraligatr", true, "ok", "water", "none", "SheerForce", 100, 312, 309, 236, 174, 202, 280, DragonDance, Liquidation, IcePunch, Crunch, "none");
+var Blaziken = new Pokemon(257, "Blaziken", true, "ok", "fire", "fighting", "SpeedBoost", 100, 301, 372, 177, 230, 176, 259, FlareBlitz, LowKick, SwordsDance, Protect, "none");
+var Salamance = new Pokemon(373, "Salamance", true, "ok", "dragon", "flying", "Intimidate", 100, 342, 405, 196, 230, 196, 289, DragonDance, DoubleEdge, Roost, Facade, "none");
+var Electivire = new Pokemon(466, "Electivire", true, "ok", "electric", "none", "MotorDrive", 100, 291, 345, 171, 226, 185, 317, FirePunch, WildCharge, Earthquake,  IcePunch, "none");
+var Porygonz = new Pokemon(474, "Porygon-Z", true, "ok", "normal", "none", "Adaptability", 100, 311, 148, 177, 369, 186, 306, TriAttack, ShadowBall, Discharge,  IceBeam, "none");
+var Serperior = new Pokemon(497, "Serperior", true, "ok", "grass", "none", "Contrary", 100, 305, 167, 226, 236, 226, 357, LeafStorm, HiddenPowerFire, Substitute,  Glare, "none");
+var Greninja = new Pokemon(658, "Greninja", true, "ok", "water", "dark", "Protean", 100, 285, 231, 170, 301, 160, 377, IceBeam, DarkPulse, GunkShot,  WaterShuriken, "none");
+var Decidueye = new Pokemon(724, "Decidueye", true, "ok", "grass", "ghost", "Overgrow", 100, 297, 313, 186, 212, 237, 262, Poltergeist, LeafBlade, SpiritShackle, ShadowSneak, "none");
+
+//pokemon almacenados en un array
+const pokemonList = [
+    GDarmanitan,
+    Charizard,
+    Feraligatr,
+    Blaziken,
+    Salamance,
+    Porygonz,
+    Electivire,
+    Serperior,
+    Greninja,
+    Decidueye,
+]
+
+//almaceno unicamente los nombres de los pokemon con su numero de la pokedex
+var listadepokemon = ""
+pokemonList.forEach( (num) => {
+    listadepokemon = listadepokemon + num.name + " " + num.pokedex + "\n";
+})
+console.log(listadepokemon);
+
+
+var choose = 0;
+let dentrono = false;
+let malaeleccion = false;
+const jugador1 = [];
+for (let index = 0; index < 6; index++) {
+    for (let j = 0; j < 50; j++) {
+        malaeleccion = false;
+        dentrono = false;
+        choose = parseInt(prompt("Ingresa el numero de pokedex del pokemon que quieres agregar a tu equipo \n" + listadepokemon));
+        // buscar el numero de pokedex dentro del equipo del jugador
+        malaeleccion = jugador1.some((el) => el.pokedex == choose);
+        // buscar el numero de pokedex en la lista de pokemon y regresar true o false
+        dentrono = pokemonList.some((el) => el.pokedex == choose);
+        if(malaeleccion == true || dentrono == false ){
+            alert("vuelve a introducir el pokemon que quieres");
+        }
+        else{
+            break;
+        }
+    }
+    jugador1[index] = pokemonList.find((el) => el.pokedex === choose)
+    console.log(jugador1[index]);
+}
+
+console.log(jugador1);
+
+
 // Crear objeto jugador y a futuro poder cambiar de pokemon
 function Player(pokedex, name, alive, stat, type1, type2, ability, lvl, hp, atk, def, satk, sdef, spd, mov1, mov2, mov3, mov4, obj){
     this.pokedex = pokedex;
@@ -53,23 +160,19 @@ function Player(pokedex, name, alive, stat, type1, type2, ability, lvl, hp, atk,
     this.obj = obj;
 }
 
-// Crear ataques
-function Movimiento(category, name, power, presition, type, effect, pp){
-    this.category = category;
-    this.name = name;
-    this.power = power;
-    this.presition = presition;
-    this.type = type;
-    this.effect = effect;
-    this.pp = pp;
-}
+//jugadores
+var Jugador1 = new Player(Charizard.name, Charizard.alive, Charizard.stat, Charizard.type1, Charizard.type2, Charizard.ability, Charizard.lvl, Charizard.hp, Charizard.atk, Charizard.def, Charizard.satk, Charizard.sdef, Charizard.spd, Charizard.mov1, Charizard.mov2, Charizard.mov3, Charizard.mov4, Charizard.obj);
+var Npc1 = new Player(Decidueye.name, Decidueye.alive, Decidueye.stat, Decidueye.type1, Decidueye.type2, Decidueye.ability, Charizard.lvl, Decidueye.hp, Decidueye.atk, Decidueye.def, Decidueye.satk, Decidueye.sdef, Decidueye.spd, Decidueye.mov1, Decidueye.mov2, Decidueye.mov3, Decidueye.mov4, Decidueye.obj);
 
-// Ataques
-var AirSlash = new Movimiento("Special", "AirSlash", 75, 95, "flying", "flinch", 15);
-var Flamethrower = new Movimiento("Special", "Flamethrower", 90, 100, "fire", "burn", 15);
-var FireFang = new Movimiento("Physical", "FireFang", 65, 95, "fire", "flinch-burn", 15);
-var HyperBeam = new Movimiento("Special", "HyperBeam", 150, 0, "fire", "loseturn", 5); //0% de acertar porque de momento solo se usa contra un fantasma
-var SpiritShackle = new Movimiento("Physical", "SpiritShackle", 80, 100, "ghost", "noswitch", 10);
+console.log(Jugador1);
+console.log(Npc1);
+
+// Funcion aleatoria, recibe el menor numero y el mayor
+function getRandomIntInclusive(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}
 
 // Calcular danio
 function danio(lvl, atk, def, mov, stat, stab, type1, type2, presition){
@@ -120,25 +223,6 @@ function danio(lvl, atk, def, mov, stat, stab, type1, type2, presition){
     return danio;
 }
 
-// Pokemon jugables
-var GDarmanitan = new Pokemon(000, "Darmanitan (Galar)", true, "ok", "ice", "none", "GorillaTactics", 100, 351, 379, 146, 86, 146, 317, Earthquake, BodyPress, IcePunch, FlareBlitz, "none");
-var Charizard = new Pokemon(006, "Charizard", true, "ok", "fire", "flying", "Blaze", 100, 297, 183, 192, 317, 207, 328, AirSlash, Flamethrower, FireFang,  HyperBeam, "none");
-var Feraligatr = new Pokemon(160, "Feraligatr", true, "ok", "water", "none", "SheerForce", 100, 312, 309, 236, 174, 202, 280, DragonDance, Liquidation, IcePunch, Crunch, "none");
-var Blaziken = new Pokemon(257, "Blaziken", true, "ok", "fire", "fighting", "SpeedBoost", 100, 301, 372, 177, 230, 176, 259, FlareBlitz, LowKick, SwordsDance, Protect, "none");
-var Salamance = new Pokemon(373, "Salamance", true, "ok", "dragon", "flying", "Intimidate", 100, 342, 405, 196, 230, 196, 289, DragonDance, DoubleEdge, Roost, Facade, "none");
-var Porygonz = new Pokemon(474, "Porygon-Z", true, "ok", "normal", "none", "Adaptability", 100, 311, 148, 177, 369, 186, 306, TriAttack, ShadowBall, Discharge,  IceBeam, "none");
-var Electivire = new Pokemon(466, "Electivire", true, "ok", "electric", "none", "MotorDrive", 100, 291, 345, 171, 226, 185, 317, FirePunch, WildCharge, Earthquake,  IcePunch, "none");
-var Serperior = new Pokemon(497, "Serperior", true, "ok", "grass", "none", "Contrary", 100, 305, 167, 226, 236, 226, 357, LeafStorm, HiddenPowerFire, Substitute,  Glare, "none");
-var Greninja = new Pokemon(658, "Greninja", true, "ok", "water", "dark", "Protean", 100, 285, 231, 170, 301, 160, 377, IceBeam, DarkPulse, GunkShot,  WaterShuriken, "none");
-var Decidueye = new Pokemon(724, "Decidueye", true, "ok", "grass", "ghost", "Overgrow", 100, 297, 313, 186, 212, 237, 262, Poltergeist, LeafBlade, SpiritShackle, ShadowSneak, "none");
-
-
-//jugadores
-var Jugador1 = new Player(Charizard.name, Charizard.alive, Charizard.stat, Charizard.type1, Charizard.type2, Charizard.ability, Charizard.lvl, Charizard.hp, Charizard.atk, Charizard.def, Charizard.satk, Charizard.sdef, Charizard.spd, Charizard.mov1, Charizard.mov2, Charizard.mov3, Charizard.mov4, Charizard.obj);
-var Npc1 = new Player(Decidueye.name, Decidueye.alive, Decidueye.stat, Decidueye.type1, Decidueye.type2, Decidueye.ability, Charizard.lvl, Decidueye.hp, Decidueye.atk, Decidueye.def, Decidueye.satk, Decidueye.sdef, Decidueye.spd, Decidueye.mov1, Decidueye.mov2, Decidueye.mov3, Decidueye.mov4, Decidueye.obj);
-
-console.log(Jugador1);
-console.log(Npc1);
 
 // Comienza la batalla pokemon!
 do {
