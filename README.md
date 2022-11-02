@@ -12,8 +12,15 @@ Subi mi primera entrega del curso en la cual incluyo un index no responsive, sim
 ### Entrega segundo desafio
 
 Principalmente agregué un sistema para poder hacer un equipo de 6 pokemon, aún falta poner a pelear justo a los 6 pokemon que eliges
-> 31/10/2022 02:46
+> 31/10/2022 14:46
 
+### Aplicando dom
+
+-Comencé a usar dom para modificar el HTML de mi sitio
+-Pase el sistema de elegir pokemon a dom en lugar de usar prompt y alert
+-Cree las cards
+-Di estilos a las cards y fondos
+> 01/11/2022 20:10
 
 
 ##### Este repositorio está siendo realizado por Kevin Cerón Escalante

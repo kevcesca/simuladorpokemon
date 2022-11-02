@@ -1,5 +1,3 @@
-            /* No es responsive pero a futuro lo sera */
-
 * {
     margin: 0;
     padding: 0;
@@ -7,45 +5,47 @@
     box-sizing: border-box; 
 }
 
-.batalla{
-    
+h1{
+    padding-top: 5%;
+    font-size: 400%;
+    text-align: center;
+    color: #FFF;
 }
-.fondo{
-    width: 99.96%;
+h2{
+    padding-top: 5%;
+    font-size: 300%;
+    text-align: center;
+    color: #FFF;
+}
+
+.texto{
+    color: white;
+}
+
+.body-jugar{
+    background: url(../assets/img/fondo.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.main-jugar{
+    background: linear-gradient(to bottom, #1466c393, #000000be);
+}
+
+.card{
+    width: 60vh;
+    height: 60vh;
+    margin-bottom: 2%;
+}
+
+.fonditos{
+    background: linear-gradient(to bottom, #1466c3, #0000005b);
+    border-width: 8px;
+    border-color: #014ba0;
+    border-radius: 2%;
+}
+
+.pokemon-img{
+    width: 150px;
     height: auto;
-    position: absolute;
-    left: 1px;
-}
-.vida-enemigo{
-    height: 100px;
-    width: auto;
-    position: absolute;
-    top: 10%;
-    left: 80%;
-}
-.pokemon-enemigo{
-    position: absolute;
-    width: 60%;
-    height: auto;
-    left: 40%;
-    top: 30%;
-}
-.decidueye{
-    width: 14%;
-}
-.vida-aliada{
-    height: 100px;
-    width: auto;
-    position: absolute;
-    top: 35%;
-}
-.pokemon-aliado{
-    position: absolute;
-    width: auto;
-    height: 60%;
-    right: 55%;
-    top: 30%;
-}
-.charizard{
-    width: 500%;
 }
