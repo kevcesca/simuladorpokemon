@@ -306,6 +306,7 @@ for (const especie of pokemonList) {
 }
 
 let botones = document.getElementsByClassName('boton');
+let botonesQuitar = document.getElementsByClassName('boton-quitar');
 let equipo = document.getElementById('equipo');
 
 let equipoGuardado = [];
@@ -316,40 +317,36 @@ if (localStorage.getItem('equipo')) {
     console.log("si hay equipo");
 }
 
-// cargar el equipo guardado (si es que hay)
-for (const especie of equipoGuardado) {
-    console.log(especie.name);
-    let pokemonBuscado = pokemonList.find(pkm => pkm.pokedex == especie.pokedex);
-    equipo.innerHTML += `
-        <div class="miembro-equipo card fonditos d-flex flex-column p-2 bd-highlight justify-content-evenly align-items-center" id=${(pokemonBuscado.pokedex)+2000}>
-            <h4 class="card-title texto">${pokemonBuscado.pokedex} ${pokemonBuscado.name}</h4>
-            <h5 class="card-text texto">${pokemonBuscado.type1} ${pokemonBuscado.type2}</h5>
-            <h6 class="card-text texto">Tiene los movimientos: ${pokemonBuscado.mov1.name} ${pokemonBuscado.mov2.name} ${pokemonBuscado.mov3.name} ${pokemonBuscado.mov4.name}</h6>
-            <img class="pokemon-img" src=${pokemonBuscado.imgUrl}>
-            <button class="boton btn btn-secondary" id=${(pokemonBuscado.pokedex)+1000}>Quitar del equipo</button>
-        </div>
-    `
-}
 
+
+// cargar el equipo guardado (si es que hay)
+function renderizarEquipo() {
+    document.getElementById('equipo').innerHTML = "";
+    for (const especie of equipoGuardado) {
+        console.log(especie.name);
+        equipo.innerHTML += `
+            <div class="miembro-equipo card fonditos d-flex flex-column p-2 bd-highlight justify-content-evenly align-items-center"}>
+                <h4 class="card-title texto">${especie.pokedex} ${especie.name}</h4>
+                <h5 class="card-text texto">${especie.type1} ${especie.type2}</h5>
+                <h6 class="card-text texto">Tiene los movimientos: ${especie.mov1.name} ${especie.mov2.name} ${especie.mov3.name} ${especie.mov4.name}</h6>
+                <img class="pokemon-img" src=${especie.imgUrl}>
+                <button class="boton-quitar btn btn-secondary" id=${(especie.pokedex)+1000}>Quitar del equipo</button>
+            </div>
+        `
+    }
+}
+renderizarEquipo();
 
 // guardar pokemon dentro del equipo
 for (const boton of botones) {
     boton.onclick = (e) => {
-        if(equipoGuardado.length<6 && e.target.id < 1000 ){
+        renderizarEquipo();
+        if(equipoGuardado.length<6){
             let dentrono = equipoGuardado.some((el) => el.pokedex == e.target.id);
             console.log(dentrono);
             if(!dentrono){
                 let pokemonBuscado = pokemonList.find(especie => especie.pokedex == e.target.id);
                 console.log(pokemonBuscado);
-                equipo.innerHTML += `
-                    <div class="miembro-equipo card fonditos d-flex flex-column p-2 bd-highlight justify-content-evenly align-items-center" id=${(pokemonBuscado.pokedex)+2000}>
-                        <h4 class="card-title texto">${pokemonBuscado.pokedex} ${pokemonBuscado.name}</h4>
-                        <h5 class="card-text texto">${pokemonBuscado.type1} ${pokemonBuscado.type2}</h5>
-                        <h6 class="card-text texto">Tiene los movimientos: ${pokemonBuscado.mov1.name} ${pokemonBuscado.mov2.name} ${pokemonBuscado.mov3.name} ${pokemonBuscado.mov4.name}</h6>
-                        <img class="pokemon-img" src=${pokemonBuscado.imgUrl}>
-                        <button class="boton btn btn-secondary" id=${(pokemonBuscado.pokedex)+1000}>Quitar del equipo</button>
-                    </div>
-                `
                 // Almacenar los pokemon dentro de tu equipo y crear un archivo JSON para guardarlos en el local storage 
                 equipoGuardado.push(pokemonBuscado);
                 console.log(equipoGuardado);
@@ -357,28 +354,28 @@ for (const boton of botones) {
             else{
                 alert("El pokemon ya esta en tu equipo");
             }
-
         }
-        else if(equipoGuardado.length >= 5 && e.target.id < 1000){
+        else{
             alert("Tu equipo ya esta completo");
         }
-        else if(e.target.id >= 1000){
-            console.log("entre a borrar");
-            let idQuitar = parseInt(e.target.id) + 1000;
-            console.log(idQuitar);
-            let quitarPokemon = document.getElementById(idQuitar);
-            console.log(quitarPokemon);
-            quitarPokemon.remove();
-            idQuitar = idQuitar - 2000;
-            for (let index = 0; index < equipoGuardado.length; index++) {
-                if(idQuitar == equipoGuardado[index].pokedex){
-                    equipoGuardado.splice(index, 1);
-                }
-                
+        localStorage.setItem('equipo', JSON.stringify(equipoGuardado));
+        // location.reload();
+        renderizarEquipo();
+    }
+}
+
+for (const boton of botonesQuitar) {
+    boton.onclick = (e) => {
+        renderizarEquipo();
+        console.log("entre a borrar");
+        let idQuitar = e.target.id - 1000;
+        console.log(idQuitar);
+        for (let index = 0; index < equipoGuardado.length; index++) {
+            if(idQuitar == equipoGuardado[index].pokedex){
+                equipoGuardado.splice(index, 1);
             }
         }
         localStorage.setItem('equipo', JSON.stringify(equipoGuardado));
-            location.reload();
-
+        renderizarEquipo();
     }
 }
