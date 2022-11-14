@@ -75,6 +75,7 @@ function Pokemon(pokedex, name, alive, stat, type1, type2, ability, lvl, hp, atk
     this.imgUrl = imgUrl;
 }
 
+
 // Pokemon jugables
 var GDarmanitan = new Pokemon(000, "Darmanitan (Galar)", true, "ok", "ice", "none", "GorillaTactics", 100, 351, 379, 146, 86, 146, 317, Earthquake, BodyPress, IcePunch, FlareBlitz, "none", "./assets/img/darmanitan-galar.gif");
 var Charizard = new Pokemon(006, "Charizard", true, "ok", "fire", "flying", "Blaze", 100, 297, 183, 192, 317, 207, 328, AirSlash, Flamethrower, FireFang, HyperBeam, "none", "./assets/img/charizard.gif");
@@ -102,38 +103,36 @@ const pokemonList = [
 ]
 
 //almaceno unicamente los nombres de los pokemon con su numero de la pokedex
-var listadepokemon = ""
+var namesAndPokedex = ""
 pokemonList.forEach((num) => {
-    listadepokemon = listadepokemon + num.name + " " + num.pokedex + "\n";
+    namesAndPokedex = namesAndPokedex + num.name + " " + num.pokedex + "\n";
 })
-console.log(listadepokemon);
+console.log(namesAndPokedex);
 
+function Movment(name, icon, animation){
+this.name = name;
+this.icon = icon;
+this.animation = animation;
+}
+var Normal = new Movment("Normal","./assets/img/normalicon", "none");
+var Fire = new Movment("Fuego", "./assets/img/fireicon", "none");
+var Water = new Movment("Agua", "./assets/img/watericon", "none");
+var Grass = new Movment("Planta", "./assets/img/grassicon", "none");
+var Electric = new Movment("Electrico", "./assets/img/electricicon", "none");
+var Ice = new Movment("Hielo", "./assets/img/iceicon", "none");
+var Fighting = new Movment("Lucha", "./assets/img/fightingicon", "none");
+var Poison = new Movment("Veneno", "./assets/img/fireicon", "none");
+var Ground = new Movment("Tierra", "./assets/img/groundicon", "none");
+var Flying = new Movment("Volador", "./assets/img/flyingicon", "none");
+var Psychic = new Movment("Psiquico", "./assets/img/psychicicon", "none");
+var Bug = new Movment("Insecto", "./assets/img/bugicon", "none");
+var Rock = new Movment("Roca", "./assets/img/rockicon", "none");
+var Ghost = new Movment("Fantasma", "./assets/img/fireicon", "none");
+var Dragon = new Movment("Dragon", "./assets/img/dragonicon", "none");
+var Dark = new Movment("Siniestro", "./assets/img/darkicon", "none");
+var Steel = new Movment("Acero", "./assets/img/steelicon", "none");
+var Fairy = new Movment("Hada", "./assets/img/fairyicon", "none");
 
-// var choose = 0;
-// let dentrono = false;
-// let malaeleccion = false;
-// const jugador1 = [];
-// for (let index = 0; index < 6; index++) {
-//     for (let j = 0; j < 50; j++) {
-//         malaeleccion = false;
-//         dentrono = false;
-//         choose = parseInt(prompt("Ingresa el numero de pokedex del pokemon que quieres agregar a tu equipo \n" + listadepokemon));
-//         // buscar el numero de pokedex dentro del equipo del jugador
-//         malaeleccion = jugador1.some((el) => el.pokedex == choose);
-//         // buscar el numero de pokedex en la lista de pokemon y regresar true o false
-//         dentrono = pokemonList.some((el) => el.pokedex == choose);
-//         if (malaeleccion == true || dentrono == false) {
-//             alert("vuelve a introducir el pokemon que quieres");
-//         }
-//         else {
-//             break;
-//         }
-//     }
-//     jugador1[index] = pokemonList.find((el) => el.pokedex === choose)
-//     console.log(jugador1[index]);
-// }
-
-// console.log(jugador1);
 
 
 // Crear objeto jugador y a futuro poder cambiar de pokemon
@@ -159,13 +158,6 @@ function Player(pokedex, name, alive, stat, type1, type2, ability, lvl, hp, atk,
     this.obj = obj;
 }
 
-//jugadores
-var Jugador1 = new Player(Charizard.name, Charizard.alive, Charizard.stat, Charizard.type1, Charizard.type2, Charizard.ability, Charizard.lvl, Charizard.hp, Charizard.atk, Charizard.def, Charizard.satk, Charizard.sdef, Charizard.spd, Charizard.mov1, Charizard.mov2, Charizard.mov3, Charizard.mov4, Charizard.obj);
-var Npc1 = new Player(Decidueye.name, Decidueye.alive, Decidueye.stat, Decidueye.type1, Decidueye.type2, Decidueye.ability, Charizard.lvl, Decidueye.hp, Decidueye.atk, Decidueye.def, Decidueye.satk, Decidueye.sdef, Decidueye.spd, Decidueye.mov1, Decidueye.mov2, Decidueye.mov3, Decidueye.mov4, Decidueye.obj);
-
-console.log(Jugador1);
-console.log(Npc1);
-
 // Funcion aleatoria, recibe el menor numero y el mayor
 function getRandomIntInclusive(min, max) {
     min = Math.ceil(min);
@@ -173,8 +165,90 @@ function getRandomIntInclusive(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
+
+// Creando la tabla de tipos
+function typesChart (movType, enemyType){
+    let multip = 0;
+
+            // Ataques poco eficaces
+    if (movType == Normal && enemyType == Rock || movType == Normal && enemyType == Steel || 
+        movType == Fire && enemyType == Fire || movType == Fire && enemyType == Water || movType == Fire && enemyType == Rock || movType == Fire && enemyType == Dragon ||
+        movType == Water && enemyType == Water || movType == Water && enemyType == Grass || movType == Water && enemyType == Dragon ||
+        movType == Grass && enemyType == Fire || movType == Grass && enemyType == Grass || movType == Grass && enemyType == Poison || movType == Grass && enemyType == Flying || movType == Grass && enemyType == Bug || movType == Grass && enemyType == Dragon || movType == Grass && enemyType == Steel ||
+        movType == Electric && enemyType == Grass || movType == Electric && enemyType == Electric || movType == Electric && enemyType == Dragon ||
+        movType == Ice && enemyType == Fire || movType == Ice && enemyType == Water || movType == Ice && enemyType == Ice || movType == Ice && enemyType == Steel ||
+        movType == Fighting && enemyType == Poison || movType == Fighting && enemyType == Flying || movType == Fighting && enemyType == Psychic || movType == Fighting && enemyType == Bug || movType == Fighting && enemyType == Fairy ||
+        movType == Poison && enemyType == Poison || movType == Poison && enemyType == Ground || movType == Poison && enemyType == Rock || movType == Poison && enemyType == Ghost ||
+        movType == Ground && enemyType == Grass || movType == Ground && enemyType == Bug ||
+        movType == Flying && enemyType == Electric || movType == Flying && enemyType == Steel || movType == Flying && enemyType == Rock ||
+        movType == Psychic && enemyType == Psychic || movType == Psychic && enemyType == Steel ||
+        movType == Bug && enemyType == Fire || movType == Bug && enemyType == Fighting || movType == Bug && enemyType == Poison || movType == Bug && enemyType == Flying || movType == Bug && enemyType == Ghost || movType == Bug && enemyType == Steel || movType == Bug && enemyType == Fairy ||
+        movType == Rock && enemyType == Fighting || movType == Rock && enemyType == Ground || movType == Rock && enemyType == Steel ||
+        movType == Ghost && enemyType == Dark ||
+        movType == Dragon && enemyType == Steel ||
+        movType == Dark && enemyType == Fighting || movType == Dark && enemyType == Dark || movType == Dark && enemyType == Fairy ||
+        movType == Steel && enemyType == Fire || movType == Steel && enemyType == Water || movType == Steel && enemyType == Water || movType == Steel && enemyType == Electric || movType == Steel && enemyType == Steel ||
+        movType == Fairy && enemyType == Fire || movType == Fairy && enemyType == Poison || movType == Fairy && enemyType == Steel
+    ) {
+        multip = .5;
+        document.getElementById('console').innerHTML = "";
+        pokeConsole.innerHTML +=`
+        <h6 class="card-text texto console-text">Es poco efectivo</H6>
+        `
+        return multip;
+    }
+            // Ataques nada eficaces
+    else if (movType == Normal && enemyType == Ghost ||
+        movType == Electric && enemyType == Grass ||
+        movType == Fighting && enemyType == Ghost ||
+        movType == Poison && enemyType == Steel ||
+        movType == Ground && enemyType == Flying ||
+        movType == Psychic && enemyType == Dark ||
+        movType == Ghost && enemyType == Normal ||
+        movType == Dragon && enemyType == Fairy
+    ) {
+        multip = 0;
+        document.getElementById('console').innerHTML = "";
+        pokeConsole.innerHTML += `
+        <h6 class="card-text texto console-text">El movimiento no afecta al rival</H6>
+        `
+        return multip;
+    }
+    else if(movType == Fire && enemyType == Grass || movType == Fire && enemyType == Ice || movType == Fire && enemyType == Bug || movType == Fire && enemyType == Steel ||
+        movType == Water && enemyType == Fire || movType == Water && enemyType == Ground || movType == Water && enemyType == Rock ||
+        movType == Grass && enemyType == Ground || movType == Grass && enemyType == Water || movType == Grass && enemyType == Rock || 
+        movType == Electric && enemyType == Water || movType == Electric && enemyType == Flying ||
+        movType == Ice && enemyType == Grass || movType == Ice && enemyType == Ground || movType == Ice && enemyType == Flying || movType == Ice && enemyType == Dragon ||
+        movType == Fighting && enemyType == Normal || movType == Fighting && enemyType == Ice || movType == Fighting && enemyType == Rock || movType == Fighting && enemyType == Dark || movType == Fighting && enemyType == Steel ||
+        movType == Poison && enemyType == Grass || movType == Poison && enemyType == Fairy ||
+        movType == Ground && enemyType == Fire || movType == Ground && enemyType == Electric || movType == Ground && enemyType == Poison || movType == Ground && enemyType == Rock || movType == Ground && enemyType == Steel ||
+        movType == Flying && enemyType == Grass || movType == Flying && enemyType == Fighting || movType == Flying && enemyType == Bug ||
+        movType == Psychic && enemyType == Fighting || movType == Psychic && enemyType == Poison || 
+        movType == Bug && enemyType == Grass || movType == Bug && enemyType == Psychic || movType == Bug && enemyType == Dark ||
+        movType == Rock && enemyType == Fire || movType == Rock && enemyType == Ice || movType == Rock && enemyType == Flying || movType == Rock && enemyType == Bug ||
+        movType == Ghost && enemyType == Psychic || movType == Ghost && enemyType == Ghost ||
+        movType == Dragon && enemyType == Dragon ||
+        movType == Dark && enemyType == Psychic || movType == Dark && enemyType == Ghost ||
+        movType == Steel && enemyType == Ice || movType == Steel && enemyType == Rock || movType == Steel && enemyType == Fairy ||
+        movType == Fairy && enemyType == Fighting || movType == Fairy && enemyType == Dragon || movType == Fairy && enemyType == Dark
+
+    ){
+        multip = 2;
+        document.getElementById('console').innerHTML = "";
+        pokeConsole.innerHTML += `
+        <h6 class="card-text texto console-text">Es super efectivo</H6>
+        `
+        return multip;
+    }
+    else {
+        multip = 1;
+        return multip;
+    }
+
+}
+
 // Calcular danio
-function danio(lvl, atk, def, mov, stat, stab, type1, type2, presition) {
+function danio(lvl, atk, def, mov, stat, stab, atype1, atype2, presition) {
     let danio = ((((lvl * 2 / 5) + 2) * mov * atk / 50) / def);
     let acertar = getRandomIntInclusive(0, 100);
 
@@ -202,12 +276,13 @@ function danio(lvl, atk, def, mov, stat, stab, type1, type2, presition) {
         }
 
         //Stab, ventajas y desventajas (Falta agregar funcion para ventajas y desventajas)
-        if (stab == type1 || stab == type2) {
+        if (stab == atype1 || stab == atype2) {
             danio = danio * 1.5;
         }
         else {
             danio = danio * 1;
         }
+
         alert("El danio es: " + danio)
         console.log("El danio es: " + danio);
     }
@@ -289,93 +364,202 @@ function danio(lvl, atk, def, mov, stat, stab, type1, type2, presition) {
 
             // Aqui comienza el dom
 
-let contenedorPokemon = document.getElementById("elegirPokemon");
-// crear las cards
-contenedorPokemon.innerHTML = ''
-for (const especie of pokemonList) {
-    let tarjetaPokemon = document.createElement('div');
-    tarjetaPokemon.className = 'card fonditos d-flex flex-column p-2 bd-highlight justify-content-evenly align-items-center'
-    tarjetaPokemon.innerHTML = `
-                <h4 class="card-title texto">${especie.pokedex} ${especie.name}</h4>
-                <h5 class="card-text texto">${especie.type1} ${especie.type2}</h5>
-                <h6 class="card-text texto">Tiene los movimientos: ${especie.mov1.name} ${especie.mov2.name} ${especie.mov3.name} ${especie.mov4.name}</h6>
-                <img class="pokemon-img" src=${especie.imgUrl}>
-                <button class="boton btn btn-secondary" id=${especie.pokedex}>Agregar al equipo</button>
-            `
-    contenedorPokemon.append(tarjetaPokemon);
-}
-
-let botones = document.getElementsByClassName('boton');
-let botonesQuitar = document.getElementsByClassName('boton-quitar');
-let equipo = document.getElementById('equipo');
-
-let equipoGuardado = [];
+let pokemonContainer = document.getElementById("elegirPokemon");
+let buttons = document.getElementsByClassName('boton');
+let deleteButton = document.getElementsByClassName('boton-quitar');
+let teamContainer = document.getElementById('equipo');
+let savedTeam = [];
+let battleContainer = document.getElementById("batalla");
+let readyToStart = false;
+let pokeConsole = document.getElementById('console');
 
 // Checar si hay un equipo guardado en el local storage
 if (localStorage.getItem('equipo')) {
-    equipoGuardado = JSON.parse(localStorage.getItem('equipo'));
+    savedTeam = JSON.parse(localStorage.getItem('equipo'));
     console.log("si hay equipo");
 }
 
-
-
-// cargar el equipo guardado (si es que hay)
-function renderizarEquipo() {
-    document.getElementById('equipo').innerHTML = "";
-    for (const especie of equipoGuardado) {
-        console.log(especie.name);
-        equipo.innerHTML += `
-            <div class="miembro-equipo card fonditos d-flex flex-column p-2 bd-highlight justify-content-evenly align-items-center"}>
-                <h4 class="card-title texto">${especie.pokedex} ${especie.name}</h4>
-                <h5 class="card-text texto">${especie.type1} ${especie.type2}</h5>
-                <h6 class="card-text texto">Tiene los movimientos: ${especie.mov1.name} ${especie.mov2.name} ${especie.mov3.name} ${especie.mov4.name}</h6>
-                <img class="pokemon-img" src=${especie.imgUrl}>
-                <button class="boton-quitar btn btn-secondary" id=${(especie.pokedex)+1000}>Quitar del equipo</button>
-            </div>
+// crear las cards
+function createCards(){
+    pokemonContainer.innerHTML = "" ;
+    if(readyToStart==false){
+        pokemonContainer.innerHTML = `
+            <h2 class="col-12">Lista de Pokemon</h2>
         `
+        for (const creature of pokemonList) {
+            let pokemonCard = document.createElement('div');
+            pokemonCard.className = 'card fonditos d-flex flex-column p-2 bd-highlight justify-content-evenly align-items-center'
+            pokemonCard.innerHTML = `
+                        <h4 class="card-title texto">${creature.pokedex} ${creature.name}</h4>
+                        <h5 class="card-text texto">${creature.type1} ${creature.type2}</h5>
+                        <h6 class="card-text texto">Tiene los movimientos: ${creature.mov1.name} ${creature.mov2.name} ${creature.mov3.name} ${creature.mov4.name}</h6>
+                        <img class="pokemon-img" src=${creature.imgUrl}>
+                        <button class="boton btn btn-secondary" id=${creature.pokedex}>Agregar al equipo</button>
+                    `
+            pokemonContainer.append(pokemonCard);
+        }
     }
 }
-renderizarEquipo();
+createCards();
+
+// cargar el equipo guardado (si es que hay)
+function loadTeam() {
+    document.getElementById('equipo').innerHTML = "";
+    if(readyToStart==false) {    
+        teamContainer.innerHTML += `
+            <h2 class="col-12">Tu equipo actual</h2>
+        `
+        for (const creature of savedTeam) {
+            console.log(creature.name);
+            teamContainer.innerHTML += `
+                <div class="miembro-equipo card fonditos d-flex flex-column p-2 bd-highlight justify-content-evenly align-items-center"}>
+                    <h4 class="card-title texto">${creature.pokedex} ${creature.name}</h4>
+                    <h5 class="card-text texto">${creature.type1} ${creature.type2}</h5>
+                    <h6 class="card-text texto">Tiene los movimientos: ${creature.mov1.name} ${creature.mov2.name} ${creature.mov3.name} ${creature.mov4.name}</h6>
+                    <img class="pokemon-img" src=${creature.imgUrl}>
+                    <button class="boton-quitar btn btn-secondary" id=${(creature.pokedex)+1000}>Quitar del equipo</button>
+                </div>
+            `
+
+            for (const button of deleteButton) {
+                button.onclick = (e) => {
+                    loadTeam();
+                    console.log("entre a borrar");
+                    let deleteId = e.target.id - 1000;
+                    console.log(deleteId);
+                    for (let index = 0; index < savedTeam.length; index++) {
+                        if(deleteId == savedTeam[index].pokedex){
+                            savedTeam.splice(index, 1);
+                        }
+                    }
+                    localStorage.setItem('equipo', JSON.stringify(savedTeam));
+                    loadTeam();
+                    letsBattle();
+                }
+            }
+        }
+    }
+    
+}
+loadTeam();
 
 // guardar pokemon dentro del equipo
-for (const boton of botones) {
-    boton.onclick = (e) => {
-        renderizarEquipo();
-        if(equipoGuardado.length<6){
-            let dentrono = equipoGuardado.some((el) => el.pokedex == e.target.id);
-            console.log(dentrono);
-            if(!dentrono){
-                let pokemonBuscado = pokemonList.find(especie => especie.pokedex == e.target.id);
-                console.log(pokemonBuscado);
+for (const button of buttons) {
+    button.onclick = (e) => {
+        loadTeam();
+        letsBattle();
+        if(savedTeam.length<6){
+            let inOrNot = savedTeam.some((el) => el.pokedex == e.target.id);
+            console.log(inOrNot);
+            if(!inOrNot){
+                let searchedPokemon = pokemonList.find(creature => creature.pokedex == e.target.id);
+                console.log(searchedPokemon);
                 // Almacenar los pokemon dentro de tu equipo y crear un archivo JSON para guardarlos en el local storage 
-                equipoGuardado.push(pokemonBuscado);
-                console.log(equipoGuardado);
+                savedTeam.push(searchedPokemon);
+                console.log(savedTeam);
             }
             else{
-                alert("El pokemon ya esta en tu equipo");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Ya en el equipo',
+                    text: 'Ese pokemon ya estaba en tu equipo',
+                    color: '#fff',
+                    background: '#1466c3'
+                })
             }
         }
         else{
-            alert("Tu equipo ya esta completo");
+            Swal.fire({
+                icon: 'error',
+                title: 'Equipo completo',
+                text: 'Tu equipo solo puede tener 6 pokemon',
+                color: '#fff',
+                background: '#1466c3'
+            })
         }
-        localStorage.setItem('equipo', JSON.stringify(equipoGuardado));
-        // location.reload();
-        renderizarEquipo();
+        localStorage.setItem('equipo', JSON.stringify(savedTeam));
+        loadTeam();
+        letsBattle();
+    }
+    
+}
+
+// Crear boton para empezar el combate 
+function letsBattle(){
+    document.getElementById('batalla').innerHTML = "";
+    if (savedTeam.length>5 && readyToStart == false) {
+        battleContainer.innerHTML += `
+            <button class="btn btn-secondary col-4" id="start" href="pages/batalla.html">Empezar el combate</button>
+        `
+        let startBattle = document.getElementById('start');
+            startBattle.onclick = () => {
+                readyToStart = true;
+                loadTeam();
+                createCards();
+                ownTeamBattle();
+                letsBattle();
+            }
+    }
+    else{
+        readyToStart = false;
+    }
+}
+letsBattle();
+
+
+let enemyContainer = document.getElementById("enemy");
+let ownContainer = document.getElementById('own');
+
+let playerTeam = savedTeam;
+let npcTeam = savedTeam;
+let playerCurrentPokemon = 4;
+
+
+
+// Colapsar todos los elementos y mostrar la batalla pokemon
+function ownTeamBattle(){
+
+    if(readyToStart==true){
+        ownContainer.innerHTML += `
+        <div id="bothPokemon" class="row col-12 d-flex flex-row bd-highlight justify-content-evenly align-items-center">
+            <div class="col-6 d-flex bd-highlight justify-content-evenly align-items-center flex-column">
+                <h5 class="texto">${playerTeam[playerCurrentPokemon].hp} HP</h5>
+                <img class="pokemon-img own-pokemon" src=${playerTeam[playerCurrentPokemon].imgUrl}>
+            </div>
+            <div class="col-6 d-flex bd-highlight justify-content-evenly align-items-center flex-column">
+                <h5 class="texto">${npcTeam[2].hp} HP</h5>
+                <img class="pokemon-img" src=${npcTeam[2].imgUrl}>
+            </div>
+        </div>
+        <div id="bottomContainer" class="row d-flex bd-highlight justify-content-between flex-row align-items-center flex-nowrap">
+            <div id="console" class=" col-6 d-flex justify-content-center align-items-center">
+                <h6 class="card-text texto console-text">Selecciona una accion</H6>
+            </div>
+            <div id="battleButtons" class="col-6 d-flex bd-highlight justify-content-between align-items-center flex-row flex-wrap">
+                <button class="btn btn-secondary battle-buttons" id="fightButton">Pelear</button>
+                <button class="btn btn-secondary battle-buttons" id="chooseButton">Pokemon</button>
+                <button class="btn btn-secondary battle-buttons" id="runButton">Huir</button>
+                <button class="btn btn-secondary battle-buttons" id="itemButton">Item</button>
+            </div>
+            
+        </div>
+        `
+        let battleButtonsContainer = document.getElementById('battleButtons');
+        let fightChoosed = document.getElementById('fightButton');
+
+        fightChoosed.onclick = () => {
+            document.getElementById('battleButtons').innerHTML = "";
+            battleButtonsContainer.innerHTML += `
+                <button class="btn btn-secondary fight-buttons" id="mov1">${playerTeam[playerCurrentPokemon].mov1.name} <br> ${playerTeam[playerCurrentPokemon].mov1.category} | precisión: ${playerTeam[playerCurrentPokemon].mov1.presition} <br> Poder: ${playerTeam[playerCurrentPokemon].mov1.power} | pp: ${playerTeam[playerCurrentPokemon].mov1.pp} </button>
+                <button class="btn btn-secondary fight-buttons" id="mov2">${playerTeam[playerCurrentPokemon].mov2.name} <br> ${playerTeam[playerCurrentPokemon].mov2.category} | precisión: ${playerTeam[playerCurrentPokemon].mov2.presition} <br> Poder: ${playerTeam[playerCurrentPokemon].mov2.power} | pp: ${playerTeam[playerCurrentPokemon].mov2.pp} </button>
+                <button class="btn btn-secondary fight-buttons" id="mov3">${playerTeam[playerCurrentPokemon].mov3.name} <br> ${playerTeam[playerCurrentPokemon].mov3.category} | precisión: ${playerTeam[playerCurrentPokemon].mov3.presition} <br> Poder: ${playerTeam[playerCurrentPokemon].mov3.power} | pp: ${playerTeam[playerCurrentPokemon].mov3.pp} </button>
+                <button class="btn btn-secondary fight-buttons" id="mov4">${playerTeam[playerCurrentPokemon].mov4.name} <br> ${playerTeam[playerCurrentPokemon].mov4.category} | precisión: ${playerTeam[playerCurrentPokemon].mov4.presition} <br> Poder: ${playerTeam[playerCurrentPokemon].mov4.power} | pp: ${playerTeam[playerCurrentPokemon].mov4.pp} </button>
+            `
+        }
+    }
+    else{
+        console.log("No me active (la batalla) jeje");
     }
 }
 
-for (const boton of botonesQuitar) {
-    boton.onclick = (e) => {
-        renderizarEquipo();
-        console.log("entre a borrar");
-        let idQuitar = e.target.id - 1000;
-        console.log(idQuitar);
-        for (let index = 0; index < equipoGuardado.length; index++) {
-            if(idQuitar == equipoGuardado[index].pokedex){
-                equipoGuardado.splice(index, 1);
-            }
-        }
-        localStorage.setItem('equipo', JSON.stringify(equipoGuardado));
-        renderizarEquipo();
-    }
-}
+                                                                                                        // category, name, power, presition, type, effect, pp

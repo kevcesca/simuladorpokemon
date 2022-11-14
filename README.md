@@ -22,6 +22,16 @@ Principalmente agregué un sistema para poder hacer un equipo de 6 pokemon, aún
 -Di estilos a las cards y fondos
 > 01/11/2022 20:10
 
+### Tercer Desafio
+
+-Perfeccione el dom
+-Escribi la tabla de tipos
+-Hice un contenedor para llevar a cabo los combates
+-Los elementos colapsan al iniciar la batalla y solo queda el contenedor de la batalla
+
+
+> 14/11/2022 01:07
+
 
 ##### Este repositorio está siendo realizado por Kevin Cerón Escalante
 

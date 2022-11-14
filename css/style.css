@@ -46,6 +46,54 @@ h2{
 }
 
 .pokemon-img{
-    width: 150px;
     height: auto;
+}
+
+#empezar{
+    padding-top: 1%;
+    padding-bottom: 1%;
+    font-size: 150%;
+    border-radius: 1%;
+}
+#own{
+    height: 100vh;
+    background-color: rgba(106, 176, 209, 0.151);
+    border-style: dashed;
+    border-color: aquamarine;
+    border-width: 10px;
+}
+#bottomContainer{
+    height: 20%;
+    padding-bottom: 2%;
+}
+#console{
+    height: 100%;
+    width: 50%;
+    background: linear-gradient(to bottom, #1466c3, #0000005b);
+    border-style: groove;
+    border-color: rgb(4, 39, 153);
+    border-width: 10px;
+    margin-right: 5%;
+}
+.console-text{
+    font-size: 150%;
+}
+#bothPokemon{
+    padding-top: 10%;
+}
+.own-pokemon{
+    transform: rotateY(180deg);
+}
+
+.battle-buttons{
+    width: 48%;
+    height: 100%;
+    margin: 2px;
+    padding: 20px;
+}
+.fight-buttons{
+    width: 48%;
+    height: 100%;
+    margin: 2px;
+    background: linear-gradient(to bottom, #c33714, #0000005b);
 }
