@@ -133,31 +133,6 @@ var Dark = new Movment("Siniestro", "./assets/img/darkicon", "none");
 var Steel = new Movment("Acero", "./assets/img/steelicon", "none");
 var Fairy = new Movment("Hada", "./assets/img/fairyicon", "none");
 
-
-
-// Crear objeto jugador y a futuro poder cambiar de pokemon
-function Player(pokedex, name, alive, stat, type1, type2, ability, lvl, hp, atk, def, satk, sdef, spd, mov1, mov2, mov3, mov4, obj) {
-    this.pokedex = pokedex;
-    this.name = name;
-    this.alive = alive;
-    this.stat = stat;
-    this.type1 = type1;
-    this.type2 = type2;
-    this.ability = ability;
-    this.lvl = lvl;
-    this.hp = hp;
-    this.atk = atk;
-    this.def = def;
-    this.satk = satk;
-    this.sdef = sdef;
-    this.spd = spd;
-    this.mov1 = mov1;
-    this.mov2 = mov2;
-    this.mov3 = mov3;
-    this.mov4 = mov4;
-    this.obj = obj;
-}
-
 // Funcion aleatoria, recibe el menor numero y el mayor
 function getRandomIntInclusive(min, max) {
     min = Math.ceil(min);
@@ -191,10 +166,8 @@ function typesChart (movType, enemyType){
         movType == Fairy && enemyType == Fire || movType == Fairy && enemyType == Poison || movType == Fairy && enemyType == Steel
     ) {
         multip = .5;
-        document.getElementById('console').innerHTML = "";
-        pokeConsole.innerHTML +=`
-        <h6 class="card-text texto console-text">Es poco efectivo</H6>
-        `
+        
+        
         return multip;
     }
             // Ataques nada eficaces
@@ -208,10 +181,6 @@ function typesChart (movType, enemyType){
         movType == Dragon && enemyType == Fairy
     ) {
         multip = 0;
-        document.getElementById('console').innerHTML = "";
-        pokeConsole.innerHTML += `
-        <h6 class="card-text texto console-text">El movimiento no afecta al rival</H6>
-        `
         return multip;
     }
     else if(movType == Fire && enemyType == Grass || movType == Fire && enemyType == Ice || movType == Fire && enemyType == Bug || movType == Fire && enemyType == Steel ||
@@ -234,10 +203,6 @@ function typesChart (movType, enemyType){
 
     ){
         multip = 2;
-        document.getElementById('console').innerHTML = "";
-        pokeConsole.innerHTML += `
-        <h6 class="card-text texto console-text">Es super efectivo</H6>
-        `
         return multip;
     }
     else {
@@ -248,18 +213,18 @@ function typesChart (movType, enemyType){
 }
 
 // Calcular danio
-function danio(lvl, atk, def, mov, stat, stab, atype1, atype2, presition) {
-    let danio = ((((lvl * 2 / 5) + 2) * mov * atk / 50) / def);
-    let acertar = getRandomIntInclusive(0, 100);
+function damage(lvl, atk, def, mov, stat, stab, atype1, atype2, presition, etype1, etype2) {
+    let damage = ((((lvl * 2 / 5) + 2) * mov * atk / 50) / def);
+    let accuracy = getRandomIntInclusive(0, 100);
 
-    if (acertar <= presition) {
+    if (accuracy <= presition) {
 
         //Checar si el pokemon atacante esta quemado
         if (stat == "burned" && atk == Jugador1.atk) {
-            danio = danio * .5 + 2;
+            damage = damage * .5 + 2;
         }
         else {
-            danio = danio * 1 + 2;
+            damage = damage * 1 + 2;
         }
 
         // Calcular critico y numero random
@@ -268,32 +233,52 @@ function danio(lvl, atk, def, mov, stat, stab, atype1, atype2, presition) {
 
         // Aplicar Critico y numero random
         if (randomnum <= 6.25) {
-            danio = danio * 2 * rnd / 100;
+            damage = damage * 2 * rnd / 100;
             console.log("Golpe Critico!");
         }
         else {
-            danio = danio * 1 * rnd / 100;
+            damage = damage * 1 * rnd / 100;
         }
 
         //Stab, ventajas y desventajas (Falta agregar funcion para ventajas y desventajas)
         if (stab == atype1 || stab == atype2) {
-            danio = danio * 1.5;
+            damage = damage * 1.5;
         }
         else {
-            danio = danio * 1;
+            damage = damage * 1;
+        }
+        let typeTotal = typesChart(stab, etype1) * typesChart(stab, etype2) ;
+        damage = damage * typeTotal;
+        if(typeTotal>1){
+            document.getElementById('console').innerHTML = "";
+            pokeConsole.innerHTML += `
+                <h6 class="card-text texto console-text">Es super efectivo</H6>
+            `
+        }
+        else if(typeTotal<1){
+            document.getElementById('console').innerHTML = "";
+            pokeConsole.innerHTML += `
+                <h6 class="card-text texto console-text">Es poco efectivo</H6>
+            `
+        }
+        else if(typeTotal==0){
+            document.getElementById('console').innerHTML = "";
+            pokeConsole.innerHTML += `
+                <h6 class="card-text texto console-text">No ha tenido efecto</H6>
+            `
         }
 
-        alert("El danio es: " + danio)
-        console.log("El danio es: " + danio);
+        alert("El danio es: " + damage)
+        console.log("El danio es: " + damage);
     }
     else {
-        danio = 0;
+        damage = 0;
         alert("El ataque ha fallado");
         console.log("El ataque ha fallado");
     }
 
 
-    return danio;
+    return damage;
 }
 
 
@@ -512,14 +497,30 @@ let ownContainer = document.getElementById('own');
 
 let playerTeam = savedTeam;
 let npcTeam = savedTeam;
-let playerCurrentPokemon = 4;
-
+let playerCurrentPokemon = 0;
+let npcCurrentPokemon = 0;
 
 
 // Colapsar todos los elementos y mostrar la batalla pokemon
 function ownTeamBattle(){
 
     if(readyToStart==true){
+        if(playerTeam[playerCurrentPokemon].hp <= 0 && playerTeam.length>0){
+            playerTeam[playerCurrentPokemon].alive = false;
+            for (let index = 0; index < playerTeam.length; index++) {
+                if (playerTeam[index].alive == true){
+                    playerCurrentPokemon = index;
+                    document.getElementById('console').innerHTML = "";
+                fightConsole.innerHTML += `
+                    <h6 class="card-text texto console-text">${playerTeam[playerCurrentPokemon].name} yo te elijo!</H6>
+                `
+                    break;
+                }
+                
+            }
+        }
+
+
         ownContainer.innerHTML += `
         <div id="bothPokemon" class="row col-12 d-flex flex-row bd-highlight justify-content-evenly align-items-center">
             <div class="col-6 d-flex bd-highlight justify-content-evenly align-items-center flex-column">
@@ -546,6 +547,7 @@ function ownTeamBattle(){
         `
         let battleButtonsContainer = document.getElementById('battleButtons');
         let fightChoosed = document.getElementById('fightButton');
+        let fightConsole = document.getElementById('console');
 
         fightChoosed.onclick = () => {
             document.getElementById('battleButtons').innerHTML = "";
@@ -555,6 +557,18 @@ function ownTeamBattle(){
                 <button class="btn btn-secondary fight-buttons" id="mov3">${playerTeam[playerCurrentPokemon].mov3.name} <br> ${playerTeam[playerCurrentPokemon].mov3.category} | precisión: ${playerTeam[playerCurrentPokemon].mov3.presition} <br> Poder: ${playerTeam[playerCurrentPokemon].mov3.power} | pp: ${playerTeam[playerCurrentPokemon].mov3.pp} </button>
                 <button class="btn btn-secondary fight-buttons" id="mov4">${playerTeam[playerCurrentPokemon].mov4.name} <br> ${playerTeam[playerCurrentPokemon].mov4.category} | precisión: ${playerTeam[playerCurrentPokemon].mov4.presition} <br> Poder: ${playerTeam[playerCurrentPokemon].mov4.power} | pp: ${playerTeam[playerCurrentPokemon].mov4.pp} </button>
             `
+            let mov1 = document.getElementById('mov1');
+            let mov2 = document.getElementById('mov2');
+            let mov3 = document.getElementById('mov3');
+            let mov4 = document.getElementById('mov4');
+            mov1.onclick = () => {
+                document.getElementById('battleButtons').innerHTML = "";
+                document.getElementById('console').innerHTML = "";
+                fightConsole.innerHTML += `
+                    <h6 class="card-text texto console-text">${playerTeam[playerCurrentPokemon].name} ha usado ${playerTeam[playerCurrentPokemon].mov1.name}</H6>
+                `
+
+            }
         }
     }
     else{
