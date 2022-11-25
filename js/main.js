@@ -42,9 +42,9 @@ let flamethrower = new Movment("Special", "Flamethrower", 90, 100, fire, "burn",
 let fireFang = new Movment("Physical", "FireFang", 65, 95, fire, "flinch-burn", 15);
 let hyperBeam = new Movment("Special", "HyperBeam", 150, 0, fire, "loseturn", 5); //0% de acertar porque de momento solo se usa contra un fantasma
 let spiritShackle = new Movment("Physical", "SpiritShackle", 80, 100, ghost, "noswitch", 10);
-let earthquake = new Movment("Physical", "Earthquake", 100, 100, "ground", "", 16); //movs
+let earthquake = new Movment("Physical", "Earthquake", 100, 100, ground, "", 16); //movs
 let flareBlitz = new Movment("Physical", "FlareBlitz", 120, 100, fire, "burn", 24);
-let bodyPress = new Movment("Physical", "BodyPress", 80, 100, "fight", "", 16);
+let bodyPress = new Movment("Physical", "BodyPress", 80, 100, fighting, "", 16);
 let dragonDance = new Movment("stat", "dragonDance", 0, 100, dragon, "", 32);
 let liquidation = new Movment("Physical", "Liquidation", 85, 100, water, "", 16);
 let crunch = new Movment("Physical", "Crunch", 80, 100, dark, "", 24);
@@ -60,7 +60,7 @@ let icePunch = new Movment("Physical", "IcePunch", 75, 100, ice, "freeze", 24);
 let glare = new Movment("Stat", "Glare", 0, 100, normal, "", 48);
 let leafStorm = new Movment("Special", "LeafStorm", 130, 90, grass, "", 8);
 let darkPulse = new Movment("Special", "darkPulse", 80, 100, dark, "flinch", 24); 
-let gunkShot = new Movment("Physical", "GunkShot ", 120, 80, "poison", "posion", 8);
+let gunkShot = new Movment("Physical", "GunkShot ", 120, 80, poison, "posion", 8);
 let waterShuriken = new Movment("Special", "WaterShuriken", 15, 100, water, "", 34);
 let poltergeist = new Movment("Physical", "Poltergeist", 110, 90, ghost, "", 8);
 let leafBlade = new Movment("Physical", "LeafBlade", 90, 100, grass, "", 24);
@@ -129,7 +129,8 @@ const pokemonList = [
 ]
 
 //almaceno unicamente los nombres de los pokemon con su numero de la pokedex
-let namesAndPokedex = ""
+let namesAndPokedex = "";
+
 pokemonList.forEach((num) => {
     namesAndPokedex = namesAndPokedex + num.name + " " + num.pokedex + "\n";
 })
@@ -527,16 +528,17 @@ letsBattle();
 let enemyContainer = document.getElementById("enemy");
 let ownContainer = document.getElementById('own');
 
-let playerTeam = savedTeam.map((el) => el);
-let npcTeam = savedTeam.map((el) => el);
+let playerTeam = savedTeam;
+let npcTeam = savedTeam;
 console.log(`${playerTeam} ${npcTeam}`);
 
 let playerCurrentPokemon = 0;
 let npcCurrentPokemon = 3;
 
 function battleOrder(attacking, defending, movChoosed, delay){
-    console.log("el tipo es" + movChoosed.type.name)
-    if(movChoosed.category == "Physical"){
+    console.log("el tipo es " + movChoosed.type.name);
+    console.log("el movechoosed es " + movChoosed.name);
+    if(movChoosed.category == 'Physical'){
         setTimeout(() => {
             defending.hp = defending.hp - damage(attacking.lvl, attacking.atk, defending.def, movChoosed.power, attacking.stat, movChoosed.type, attacking.type1, attacking.type2, movChoosed.presition, defending.type1, defending.type2, attacking, movChoosed);
             console.log(defending.hp);
@@ -581,44 +583,31 @@ function aliveOrNot(player, current){
     }
     return index;
 }
+let fightConsole = document.getElementById('console');
 
-function reloadBattle(){
-    document.getElementById('own').innerHTML = "";
-    ownContainer.innerHTML += `
-        <div id="bothPokemon" class="row col-12 d-flex flex-row bd-highlight justify-content-evenly align-items-center">
-            <div class="col-6 d-flex bd-highlight justify-content-evenly align-items-center flex-column">
-                <h5 class="texto">${playerTeam[playerCurrentPokemon].hp} HP</h5>
-                <h5 class="texto">${playerTeam[playerCurrentPokemon].name}</h5>
-                <img class="pokemon-img own-pokemon" src=${playerTeam[playerCurrentPokemon].imgUrl}>
-            </div>
-            <div class="col-6 d-flex bd-highlight justify-content-evenly align-items-center flex-column">
-                <h5 class="texto">${npcTeam[npcCurrentPokemon].hp} HP</h5>
-                <h5 class="texto">${npcTeam[npcCurrentPokemon].name}</h5>
-                <img class="pokemon-img" src=${npcTeam[npcCurrentPokemon].imgUrl}>
-            </div>
-        </div>
-        
-        `
-}
-function reloadBattleButtons (){
-    ownContainer.innerHTML += `
-        <div id="bottomContainer" class="row d-flex bd-highlight justify-content-between flex-row align-items-center flex-nowrap">
-                <div id="console" class=" col-6 d-flex justify-content-center align-items-center">
-                    <h6 class="card-text texto console-text">Selecciona una accion</H6>
-                </div>
-                <div id="battleButtons" class="col-6 d-flex bd-highlight justify-content-between align-items-center flex-row flex-wrap">
-                    <button class="btn btn-secondary battle-buttons" id="fightButton">Pelear</button>
-                    <button class="btn btn-secondary battle-buttons" id="chooseButton">Pokemon</button>
-                    <button class="btn btn-secondary battle-buttons" id="runButton">Huir</button>
-                    <button class="btn btn-secondary battle-buttons" id="itemButton">Item</button>
-                </div>
-            </div>
-    `
-}
+// function reloadBattleButtons (){
+//     ownContainer.innerHTML += `
+//         <div id="bottomContainer" class="row d-flex bd-highlight justify-content-between flex-row align-items-center flex-nowrap">
+//                 <div id="console" class=" col-6 d-flex justify-content-center align-items-center">
+//                     <h6 class="card-text texto console-text">Selecciona una accion</H6>
+//                 </div>
+//                 <div id="battleButtons" class="col-6 d-flex bd-highlight justify-content-between align-items-center flex-row flex-wrap">
+//                     <button class="btn btn-secondary battle-buttons" id="fightButton">Pelear</button>
+//                     <button class="btn btn-secondary battle-buttons" id="chooseButton">Pokemon</button>
+//                     <button class="btn btn-secondary battle-buttons" id="runButton">Huir</button>
+//                     <button class="btn btn-secondary battle-buttons" id="itemButton">Item</button>
+//                 </div>
+//             </div>
+//     `
+// }
 
 // Colapsar todos los elementos y mostrar la batalla pokemon
 function ownTeamBattle(){
     if(readyToStart==true){
+        let playerTeam = savedTeam;
+        let npcTeam = savedTeam;
+        letsBattle();
+        ownContainer.innerHTML = "";
         ownContainer.innerHTML += `
         <div id="bothPokemon" class="row col-12 d-flex flex-row bd-highlight justify-content-evenly align-items-center">
             <div class="col-6 d-flex bd-highlight justify-content-evenly align-items-center flex-column">
@@ -647,7 +636,7 @@ function ownTeamBattle(){
         `
         let battleButtonsContainer = document.getElementById('battleButtons');
         let fightChoosed = document.getElementById('fightButton');
-        let fightConsole = document.getElementById('console');
+        let runChoosed = document.getElementById('runButton');
 
         fightChoosed.onclick = () => {
             document.getElementById('battleButtons').innerHTML = "";
@@ -695,49 +684,62 @@ function ownTeamBattle(){
                 }
                 setTimeout(() => {
                     console.log(`el pokemon actual es ${npcTeam[npcCurrentPokemon].name}  current ${npcCurrentPokemon}`);
-                    reloadBattle();
-                    reloadBattleButtons();
                 }, 12000);
+                setTimeout(() => {
+                    readyToStart = false;
+                    ownTeamBattle();
+                    readyToStart = true;
+                    ownTeamBattle();
+                    console.log("Soy inteligente jeje");
+                }, 13000);
                 
             }
-            mov2.onclick = () => {
-                //Si el jugador tiene mayor velocidad que el enemigo
-                if(playerTeam[playerCurrentPokemon].spd > npcTeam[npcCurrentPokemon].spd){
-                    battleOrder(playerTeam[playerCurrentPokemon], npcTeam[npcCurrentPokemon], playerTeam[playerCurrentPokemon].mov2, 1000);
-                    battleOrder(npcTeam[npcCurrentPokemon], playerTeam[playerCurrentPokemon], npcTeam[npcCurrentPokemon].mov2, 4000);
+        }
+        runChoosed.onclick = () => {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Seguro que quieres abandonar?',
+                text: "Se perdera el progreso del combate",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Si, quiero huir',
+                cancelButtonText: 'No, continuar el combate',
+                reverseButtons: true,
+                color: '#fff',
+                background: '#1466c3'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    swalWithBootstrapButtons.fire(
+                        'Has huido',
+                        'Volviste al menu',
+                        'success'
+                    )
+                    location.reload();
+                } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'No has huido',
+                        'Continua el combate',
+                        'error'
+                    )
+                    
                 }
-                else{
-                    battleOrder(playerTeam[playerCurrentPokemon], npcTeam[npcCurrentPokemon], playerTeam[playerCurrentPokemon].mov2, 1000);
-                    battleOrder(npcTeam[npcCurrentPokemon], playerTeam[playerCurrentPokemon], npcTeam[npcCurrentPokemon].mov2, 4000);
-                }
-            }
-            mov3.onclick = () => {
-                //Si el jugador tiene mayor velocidad que el enemigo
-                if(playerTeam[playerCurrentPokemon].spd > npcTeam[npcCurrentPokemon].spd){
-                    battleOrder(playerTeam[playerCurrentPokemon], npcTeam[npcCurrentPokemon], playerTeam[playerCurrentPokemon].mov3, 1000);
-                    battleOrder(npcTeam[npcCurrentPokemon], playerTeam[playerCurrentPokemon], npcTeam[npcCurrentPokemon].mov3, 4000);
-                }
-                else{
-                    battleOrder(playerTeam[playerCurrentPokemon], npcTeam[npcCurrentPokemon], playerTeam[playerCurrentPokemon].mov3, 1000);
-                    battleOrder(npcTeam[npcCurrentPokemon], playerTeam[playerCurrentPokemon], npcTeam[npcCurrentPokemon].mov3, 4000);
-                }
-            }
-            mov4.onclick = () => {
-                //Si el jugador tiene mayor velocidad que el enemigo
-                if(playerTeam[playerCurrentPokemon].spd > npcTeam[npcCurrentPokemon].spd){
-                    battleOrder(playerTeam[playerCurrentPokemon], npcTeam[npcCurrentPokemon], playerTeam[playerCurrentPokemon].mov4, 1000);
-                    battleOrder(npcTeam[npcCurrentPokemon], playerTeam[playerCurrentPokemon], npcTeam[npcCurrentPokemon].mov4, 4000);
-                }
-                else{
-                    battleOrder(playerTeam[playerCurrentPokemon], npcTeam[npcCurrentPokemon], playerTeam[playerCurrentPokemon].mov4, 1000);
-                    battleOrder(npcTeam[npcCurrentPokemon], playerTeam[playerCurrentPokemon], npcTeam[npcCurrentPokemon].mov4, 4000);
-                }
-            }
+            })
         }
     }
     else{
         console.log("No me active (la batalla) jeje");
     }
+    
 }
 
                                                                                                         // category, name, power, presition, type, effect, pp
