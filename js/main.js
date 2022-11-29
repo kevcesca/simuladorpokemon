@@ -101,8 +101,8 @@ function Pokemon(pokedex, name, alive, stat, type1, type2, ability, lvl, hp, atk
 }
 
 // Pokemon jugables
-let galarianDarmanitan = new Pokemon(000, "Darmanitan (Galar)", true, "ok", ice, none, "GorillaTactics", 100, 351, 379, 146, 86, 146, 317, earthquake, bodyPress, icePunch, flareBlitz, "none", "./assets/img/darmanitan-galar.gif");
-let charizard = new Pokemon(006, "Charizard", true, "ok", fire, flying, "Blaze", 100, 297, 183, 192, 317, 207, 328, airSlash, flamethrower, fireFang, hyperBeam, "none", "./assets/img/charizard.gif");
+let galarianDarmanitan = new Pokemon(0, "Darmanitan (Galar)", true, "ok", ice, none, "GorillaTactics", 100, 351, 379, 146, 86, 146, 317, earthquake, bodyPress, icePunch, flareBlitz, "none", "./assets/img/darmanitan-galar.gif");
+let charizard = new Pokemon(6, "Charizard", true, "ok", fire, flying, "Blaze", 100, 297, 183, 192, 317, 207, 328, airSlash, flamethrower, fireFang, hyperBeam, "none", "./assets/img/charizard.gif");
 let feraligatr = new Pokemon(160, "Feraligatr", true, "ok", water, none, "SheerForce", 100, 312, 309, 236, 174, 202, 280, dragonDance, liquidation, icePunch, crunch, "none", "./assets/img/feraligatr.gif");
 let blaziken = new Pokemon(257, "Blaziken", true, "ok", fire, fighting, "SpeedBoost", 100, 301, 372, 177, 230, 176, 259, flareBlitz, lowKick, swordsDance, protect, "none", "./assets/img/blaziken-f.gif");
 let salamance = new Pokemon(373, "Salamance", true, "ok", dragon, flying, "Intimidate", 100, 342, 405, 196, 230, 196, 289, dragonDance, doubleEdge, roost, facade, "none", "./assets/img/salamence.gif");
@@ -212,8 +212,11 @@ function typesChart (movType, enemyType){
 }
 
 // Calcular danio
-function damage(lvl, atk, def, mov, stat, stab, atype1, atype2, presition, etype1, etype2, attacking, movChoosed) {
-    console.log("Este es el movChoosed" + movChoosed.name);
+function damage(attacking, defending, movChoosed) {
+    console.log("Este es el movChoosed " + movChoosed.name);
+    console.log("Este es el attacking " + attacking.name);
+    console.log("Este es el defending " + defending.name);
+    let damage = 1;
     setTimeout(() => {
         let fightConsole = document.getElementById('console');
         document.getElementById('battleButtons').innerHTML = "";
@@ -223,13 +226,24 @@ function damage(lvl, atk, def, mov, stat, stab, atype1, atype2, presition, etype
         `
     }, 5);
 
-    let damage = ((((lvl * 2 / 5) + 2) * mov * atk / 50) / def);
-    let accuracy = getRandomIntInclusive(0, 100);
+    if(movChoosed.category == 'Physical'){
+        damage = ((((attacking.lvl * 2 / 5) + 2) * movChoosed.power * attacking.atk / 50) / defending.def);
+        // console.log("Fue un ataque fisico " + damage);
+        // console.log("Este es el power " + movChoosed.power);
+        // console.log("Este es la estadistica " + attacking.atk);
+        // console.log("Este es la estadistica defensiva " + defending.def);
+    }
+    else{
+        damage = ((((attacking.lvl * 2 / 5) + 2) * movChoosed.power * attacking.satk / 50) / defending.sdef);
+        console.log("Fue un ataque especial " + damage);
+    }
 
-    if (accuracy <= presition) {
+
+    let accuracy = getRandomIntInclusive(0, 100);
+    if (accuracy <= movChoosed.presition) {
 
         //Checar si el pokemon atacante esta quemado
-        if (stat == "burned" && atk == Jugador1.atk) {
+        if (attacking.stat == "burned") {
             damage = damage * .5 + 2;
         }
         else {
@@ -250,15 +264,15 @@ function damage(lvl, atk, def, mov, stat, stab, atype1, atype2, presition, etype
         }
 
         //Stab, ventajas y desventajas (Falta agregar funcion para ventajas y desventajas)
-        if (stab == atype1 || stab == atype2) {
+        if (movChoosed.type == attacking.type1 || movChoosed.type == attacking.type2) {
             damage = damage * 1.5;
         }
         else {
             damage = damage * 1;
         }
-        console.log(stab.name)
-        let damageType1 = typesChart(stab.name, etype1.name);
-        let damageType2 = typesChart(stab.name, etype2.name);
+        console.log(movChoosed.type.name)
+        let damageType1 = typesChart(movChoosed.type.name, defending.type1.name);
+        let damageType2 = typesChart(movChoosed.type.name, defending.type2.name);
         let typeTotal = damageType1 * damageType2;
         console.log(damageType1);
         console.log(damageType2);
@@ -273,7 +287,6 @@ function damage(lvl, atk, def, mov, stat, stab, atype1, atype2, presition, etype
                     fightConsole.innerHTML += `
                         <h6 class="card-text texto console-text">Es super efectivo</H6>
                     `
-                    console.log("El danio esa: " + damage);
             }
             else if(typeTotal<1){
                     let fightConsole = document.getElementById('console');
@@ -282,7 +295,6 @@ function damage(lvl, atk, def, mov, stat, stab, atype1, atype2, presition, etype
                     fightConsole.innerHTML += `
                         <h6 class="card-text texto console-text">Es poco efectivo</H6>
                     `
-                    console.log("El danio esa: " + damage);
             }
             else if(typeTotal==0){
                     let fightConsole = document.getElementById('console');
@@ -291,10 +303,9 @@ function damage(lvl, atk, def, mov, stat, stab, atype1, atype2, presition, etype
                     fightConsole.innerHTML += `
                         <h6 class="card-text texto console-text">No ha tenido efecto</H6>
                     `
-                    console.log("El danio esa: " + damage);
             }
 
-        }, 2000);
+        }, 1000);
         console.log("El danio es: " + damage);
     }
     else {
@@ -306,79 +317,12 @@ function damage(lvl, atk, def, mov, stat, stab, atype1, atype2, presition, etype
             fightConsole.innerHTML += `
                 <h6 class="card-text texto console-text">El ataque ha fallado</H6>
             `
-        }, 2000);
+        }, 1000);
         console.log("El ataque ha fallado");
     }
 
     return damage;
 }
-
-
-
-// // Comienza la batalla pokemon!
-// do {
-//     if (Jugador1.spd > Npc1.spd) { // Si la velocidad del jugador es mayor a la del CPU
-//         // Turno Jugador
-
-//         if (Jugador1.alive == true && Npc1.alive == true) {
-//             ataque = parseInt(prompt("Ingresa un numero para usar uno de tus ataques: \n1.-Air Slash \n2.-Lanza Llamas \n3.-Colmillo Igneo \n4.-Hiperrayo "));
-//             switch (ataque) {
-//                 case 1: // airSlash
-//                     Npc1.hp = Npc1.hp - danio(Jugador1.lvl, Jugador1.satk, Npc1.sdef, Jugador1.mov1.power, Jugador1.stat, Jugador1.mov1.type, Jugador1.type1, Jugador1.type2, Jugador1.mov1.presition);
-//                     break;
-//                 case 2: // flamethrower
-//                     Npc1.hp = Npc1.hp - danio(Jugador1.lvl, Jugador1.satk, Npc1.sdef, Jugador1.mov2.power, Jugador1.stat, Jugador1.mov2.type, Jugador1.type1, Jugador1.type2, Jugador1.mov2.presition);
-//                     break;
-//                 case 3: // "Fuego" fang
-//                     Npc1.hp = Npc1.hp - danio(Jugador1.lvl, Jugador1.atk, Npc1.def, Jugador1.mov3.power, Jugador1.stat, Jugador1.mov3.type, Jugador1.type1, Jugador1.type2, "Fuego"Fang.mov3.presition);
-//                     break;
-//                 case 4: // Hyper beam
-//                     Npc1.hp = Npc1.hp - danio(Jugador1.lvl, Jugador1.satk, Npc1.sdef, Jugador1.mov4.power, Jugador1.stat, Jugador1.mov4.type, Jugador1.type1, Jugador1.type2, Jugador1.mov4.presition);
-//                     break;
-//                 default:
-//                     ataque = 0;
-//                     break;
-//             }
-//             if (Jugador1.hp <= 0) {
-//                 Jugador1.alive = false;
-//             }
-//             if (Npc1.hp <= 0) {
-//                 Npc1.alive = false;
-//             }
-//         }
-
-//         // Turno CPU
-//         if (Jugador1.alive == true && Npc1.alive == true) {
-//             Jugador1.hp = Jugador1.hp - danio(Npc1.lvl, Npc1.satk, Jugador1.sdef, SpiritShackle.power, Npc1.stat, SpiritShackle.type, Npc1.type1, Npc1.type2, SpiritShackle.presition);
-//             if (Jugador1.hp <= 0) {
-//                 Jugador1.alive = false;
-//             }
-//             if (Npc1.hp <= 0) {
-//                 Npc1.alive = false;
-//             }
-//         }
-//     }
-//     else {
-//         // De momento decidueye no es mas rapido que charizard
-//     }
-
-//     if (Jugador1.hp <= 0) {
-//         Jugador1.alive = false;
-//         Jugador1.hp = 0;
-//     }
-//     if (Npc1.hp <= 0) {
-//         Npc1.alive = false;
-//         Npc1.hp = 0;
-//     }
-//     alert("El hp restante de tu pokemon es: " + Jugador1.hp + " / " + Charizard.hp + "\n\nEl hp restante del pokemon enemigo es " + Npc1.hp + " / " + Decidueye.hp);
-// } while (Jugador1.alive == true && Npc1.alive == true);
-
-// if (Jugador1.hp <= 0) {
-//     alert("La CPU ha ganado");
-// }
-// else if (Npc1.hp <= 0) {
-//     alert("Has ganado!");
-// }
 
             // Aqui comienza el dom
 
@@ -390,12 +334,16 @@ let savedTeam = [];
 let battleContainer = document.getElementById("batalla");
 let readyToStart = false;
 let pokeConsole = document.getElementById('console');
+let supremeContainer = document.getElementById("supremeContainer");
 
 // Checar si hay un equipo guardado en el local storage
-if (localStorage.getItem('equipo')) {
-    savedTeam = JSON.parse(localStorage.getItem('equipo'));
-    console.log("si hay equipo");
+function checkStorage(){
+    if (localStorage.getItem('equipo')) {
+        savedTeam = JSON.parse(localStorage.getItem('equipo'));
+        console.log("si hay equipo");
+    }
 }
+checkStorage();
 
 // crear las cards
 function createCards(){
@@ -462,45 +410,53 @@ function loadTeam() {
 loadTeam();
 
 // guardar pokemon dentro del equipo
-for (const button of buttons) {
-    button.onclick = (e) => {
-        loadTeam();
-        letsBattle();
-        if(savedTeam.length<6){
-            let inOrNot = savedTeam.some((el) => el.pokedex == e.target.id);
-            console.log(inOrNot);
-            if(!inOrNot){
-                let searchedPokemon = pokemonList.find(creature => creature.pokedex == e.target.id);
-                console.log(searchedPokemon);
-                // Almacenar los pokemon dentro de tu equipo y crear un archivo JSON para guardarlos en el local storage 
-                savedTeam.push(searchedPokemon);
-                console.log(savedTeam);
+function savePokemonOnTeam (){
+    for (const button of buttons) {
+        button.onclick = (e) => {
+            loadTeam();
+            letsBattle();
+            if(savedTeam.length<6){
+                let inOrNot = savedTeam.some((el) => el.pokedex == e.target.id);
+                console.log(inOrNot);
+                if(!inOrNot){
+                    let searchedPokemon = pokemonList.find(creature => creature.pokedex == e.target.id);
+                    console.log(searchedPokemon);
+                    // Almacenar los pokemon dentro de tu equipo y crear un archivo JSON para guardarlos en el local storage 
+                    savedTeam.push(searchedPokemon);
+                    console.log(savedTeam);
+
+                    if(savedTeam.length==6){
+                        supremeContainer.innerHTML = "" ;
+                        location.reload();
+                    }
+                }
+                else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Ya en el equipo',
+                        text: 'Ese pokemon ya estaba en tu equipo',
+                        color: '#fff',
+                        background: '#1466c3'
+                    })
+                }
             }
             else{
                 Swal.fire({
                     icon: 'error',
-                    title: 'Ya en el equipo',
-                    text: 'Ese pokemon ya estaba en tu equipo',
+                    title: 'Equipo completo',
+                    text: 'Tu equipo solo puede tener 6 pokemon',
                     color: '#fff',
                     background: '#1466c3'
                 })
             }
+            localStorage.setItem('equipo', JSON.stringify(savedTeam));
+            loadTeam();
+            letsBattle();
         }
-        else{
-            Swal.fire({
-                icon: 'error',
-                title: 'Equipo completo',
-                text: 'Tu equipo solo puede tener 6 pokemon',
-                color: '#fff',
-                background: '#1466c3'
-            })
-        }
-        localStorage.setItem('equipo', JSON.stringify(savedTeam));
-        loadTeam();
-        letsBattle();
+        
     }
-    
 }
+savePokemonOnTeam ();
 
 // Crear boton para empezar el combate 
 function letsBattle(){
@@ -512,50 +468,32 @@ function letsBattle(){
         let startBattle = document.getElementById('start');
             startBattle.onclick = () => {
                 readyToStart = true;
+                savePokemonOnTeam ();
+                checkStorage();
                 loadTeam();
                 createCards();
                 ownTeamBattle();
                 letsBattle();
+                declaringVars();
             }
-    }
-    else{
-        readyToStart = false;
     }
 }
 letsBattle();
 
-
 let enemyContainer = document.getElementById("enemy");
-let ownContainer = document.getElementById('own');
-
-let playerTeam = savedTeam;
-let npcTeam = savedTeam;
-console.log(`${playerTeam} ${npcTeam}`);
-
-let playerCurrentPokemon = 0;
-let npcCurrentPokemon = 3;
-
-function battleOrder(attacking, defending, movChoosed, delay){
-    console.log("el tipo es " + movChoosed.type.name);
-    console.log("el movechoosed es " + movChoosed.name);
-    if(movChoosed.category == 'Physical'){
-        setTimeout(() => {
-            defending.hp = defending.hp - damage(attacking.lvl, attacking.atk, defending.def, movChoosed.power, attacking.stat, movChoosed.type, attacking.type1, attacking.type2, movChoosed.presition, defending.type1, defending.type2, attacking, movChoosed);
-            console.log(defending.hp);
-        }, delay);
-    }
-    else{
-        setTimeout(() => {
-            defending.hp = defending.hp - damage(attacking.lvl, attacking.satk, defending.def, movChoosed.power, attacking.stat, movChoosed.type, attacking.type1, attacking.type2, movChoosed.presition, defending.type1, defending.type2, attacking, movChoosed);
-            console.log(defending.hp);
-        }, delay);
-    }
-}
+    let ownContainer = document.getElementById('own');
+    let playerTeam = structuredClone(savedTeam);
+    let npcTeam = structuredClone(savedTeam);
+    
+    console.log(`${playerTeam} ${npcTeam}`);
+    
+    let playerCurrentPokemon = 0;
+    let npcCurrentPokemon = 3;
 
 // Detectar si derrotaron al pokemon y cambiar de pokemon debilitado (current = playerCurrentPokemon, player = playerTeam)
-function aliveOrNot(player, current){
+function aliveOrNot(player, current, delay){
     console.log(`el current es ${current}`);
-    let index = 0
+    let index = 0;
     if(player[current].hp <= 0 && player.length>0){
         player[current].hp = 0 ;
         player[current].alive = false;
@@ -564,10 +502,10 @@ function aliveOrNot(player, current){
             document.getElementById('console').innerHTML += `
                 <h6 class="card-text texto console-text">${player[current].name} se ha debilitado</H6>
             `
-        }, 0);
+        }, delay + 2);
         
         for (index = 0; index < player.length; index++) {
-            console.log("vivo el pana"+ player[index].alive);
+            console.log(`el pana  ${player[index].name} esta ${player[index].alive}`);
             if (player[index].alive == true){
                 setTimeout(() => {
                     document.getElementById('console').innerHTML = "";
@@ -576,36 +514,228 @@ function aliveOrNot(player, current){
                     `
                     console.log(`current es ${current} e index es ${index}`);
                     
-                }, 2);
+                }, delay + 1000);
                 break;
             }
         }
+    }
+    if(index == 6 && player == npcTeam){
+        Swal.fire({
+            title: 'Ganaste el combate!',
+            width: 600,
+            padding: '3em',
+            color: '#716add',
+            background: '#fff url(/images/trees.png)',
+            backdrop: `
+                rgba(0,0,123,0.4)
+                url("https://i.pinimg.com/originals/8b/22/c2/8b22c2b446f9f539693c305d7e599ef6.gif")
+                left top
+                no-repeat
+            `
+        })
+    }
+    
+    if(index == 6 && player == playerTeam){
+        Swal.fire({
+            title: 'Perdiste el combate',
+            width: 600,
+            padding: '3em',
+            color: '#716add',
+            background: '#fff url(/images/trees.png)',
+            backdrop: `
+                rgba(0,0,123,0.4)
+                url("https://i.gifer.com/6B2Z.gif")
+                left top
+                no-repeat
+            `
+        })
     }
     return index;
 }
 let fightConsole = document.getElementById('console');
 
-// function reloadBattleButtons (){
-//     ownContainer.innerHTML += `
-//         <div id="bottomContainer" class="row d-flex bd-highlight justify-content-between flex-row align-items-center flex-nowrap">
-//                 <div id="console" class=" col-6 d-flex justify-content-center align-items-center">
-//                     <h6 class="card-text texto console-text">Selecciona una accion</H6>
-//                 </div>
-//                 <div id="battleButtons" class="col-6 d-flex bd-highlight justify-content-between align-items-center flex-row flex-wrap">
-//                     <button class="btn btn-secondary battle-buttons" id="fightButton">Pelear</button>
-//                     <button class="btn btn-secondary battle-buttons" id="chooseButton">Pokemon</button>
-//                     <button class="btn btn-secondary battle-buttons" id="runButton">Huir</button>
-//                     <button class="btn btn-secondary battle-buttons" id="itemButton">Item</button>
-//                 </div>
-//             </div>
-//     `
-// }
+function midTurn(){
+    setTimeout(() => {
+        ownContainer.innerHTML = "";
+        ownContainer.innerHTML += `
+        <div id="bothPokemon" class="row col-12 d-flex flex-row bd-highlight justify-content-evenly align-items-center">
+            <div class="col-6 d-flex bd-highlight justify-content-evenly align-items-center flex-column">
+                <h5 class="texto">${playerTeam[playerCurrentPokemon].hp} HP</h5>
+                <h5 class="texto">${playerTeam[playerCurrentPokemon].name}</h5>
+                <img class="pokemon-img own-pokemon" src=${playerTeam[playerCurrentPokemon].imgUrl}>
+            </div>
+            <div class="col-6 d-flex bd-highlight justify-content-evenly align-items-center flex-column">
+                <h5 class="texto">${npcTeam[npcCurrentPokemon].hp} HP</h5>
+                <h5 class="texto">${npcTeam[npcCurrentPokemon].name}</h5>
+                <img class="pokemon-img" src=${npcTeam[npcCurrentPokemon].imgUrl}>
+            </div>
+        </div>
+        <div id="bottomContainer" class="row d-flex bd-highlight justify-content-between flex-row align-items-center flex-nowrap">
+            <div id="console" class=" col-6 d-flex justify-content-center align-items-center">
+                <h6 class="card-text texto console-text"> </H6>
+            </div>
+        </div>
+        `
+    }, 4000);
+}
+
+function pokeChange(){
+    
+    readyToStart = false;
+    ownTeamBattle();
+    readyToStart = true;
+    ownTeamBattle();
+
+    playerTeam[playerCurrentPokemon].hp = playerTeam[playerCurrentPokemon].hp - damage(npcTeam[npcCurrentPokemon], playerTeam[playerCurrentPokemon], npcTeam[npcCurrentPokemon].mov1);
+    
+    setTimeout(() => {
+        if(playerTeam[playerCurrentPokemon].hp <= 0){
+            playerCurrentPokemon = aliveOrNot(playerTeam, playerCurrentPokemon, 0);
+        }
+        else{
+            readyToStart = false;
+            ownTeamBattle();
+            readyToStart = true;
+            ownTeamBattle();
+        }
+    }, 2500);
+}
+function errorAlreadyBattling(){
+    Swal.fire({
+        icon: 'error',
+        title: 'Pokemon combatiendo',
+        text: 'Ese pokemon esta combatiendo actualmente',
+        color: '#fff',
+        background: '#1466c3'
+    })
+}
+function errorAlreadydefeated(){
+    Swal.fire({
+        icon: 'error',
+        title: 'Pokemon debilitado',
+        text: 'Ese pokemon ya fue debilitado',
+        color: '#fff',
+        background: '#1466c3'
+    })
+}
+function executingMov(playerMovChoosed, npcMovChoosed){
+        //Si el jugador tiene mayor velocidad que el enemigo
+        if(playerTeam[playerCurrentPokemon].spd > npcTeam[npcCurrentPokemon].spd){
+            npcTeam[npcCurrentPokemon].hp = npcTeam[npcCurrentPokemon].hp - damage(playerTeam[playerCurrentPokemon],npcTeam[npcCurrentPokemon], playerMovChoosed);
+            setTimeout(() => {
+                if(npcTeam[npcCurrentPokemon].hp <= 0){
+                    npcCurrentPokemon = aliveOrNot(npcTeam, npcCurrentPokemon, 0);
+                    if(aliveOrNot(npcTeam, npcCurrentPokemon, 5) == 6){
+                        Swal.fire({
+                            title: 'Ganaste el combate!',
+                            width: 600,
+                            padding: '3em',
+                            color: '#716add',
+                            background: '#fff url(/images/trees.png)',
+                            backdrop: `
+                                rgba(0,0,123,0.4)
+                                url("https://i.pinimg.com/originals/8b/22/c2/8b22c2b446f9f539693c305d7e599ef6.gif")
+                                left top
+                                no-repeat
+                            `
+                        })
+                    }
+                }
+                else{
+                    // turno del rival
+                    setTimeout(() => {
+                        playerTeam[playerCurrentPokemon].hp = playerTeam[playerCurrentPokemon].hp - damage(npcTeam[npcCurrentPokemon], playerTeam[playerCurrentPokemon], npcMovChoosed);
+                    }, 2000);
+                    setTimeout(() => {
+                        if(playerTeam[playerCurrentPokemon].hp <= 0){
+                            playerCurrentPokemon = aliveOrNot(playerTeam, playerCurrentPokemon, 1000);
+                            if(aliveOrNot(playerTeam, playerCurrentPokemon, 1005) == 6){
+                                Swal.fire({
+                                    title: 'Perdiste el combate',
+                                    width: 600,
+                                    padding: '3em',
+                                    color: '#716add',
+                                    background: '#fff url(/images/trees.png)',
+                                    backdrop: `
+                                        rgba(0,0,123,0.4)
+                                        url("https://i.gifer.com/6B2Z.gif")
+                                        left top
+                                        no-repeat
+                                    `
+                                })
+                            }
+                        }
+                    }, 3000);
+                }
+            }, 1000);
+        }
+        else{
+            // turno del rival
+            playerTeam[playerCurrentPokemon].hp = playerTeam[playerCurrentPokemon].hp - damage(npcTeam[npcCurrentPokemon], playerTeam[playerCurrentPokemon], npcMovChoosed);
+            setTimeout(() => {
+                if(playerTeam[playerCurrentPokemon].hp <= 0){
+                    playerCurrentPokemon = aliveOrNot(playerTeam, playerCurrentPokemon, 0);
+                    if(aliveOrNot(playerTeam, playerCurrentPokemon, 0) == 6){
+                        Swal.fire({
+                            title: 'Perdiste el combate',
+                            width: 600,
+                            padding: '3em',
+                            color: '#716add',
+                            background: '#fff url(/images/trees.png)',
+                            backdrop: `
+                                rgba(0,0,123,0.4)
+                                url("https://i.gifer.com/6B2Z.gif")
+                                left top
+                                no-repeat
+                            `
+                        })
+                    }
+                }
+                else{
+                    // turno del jugador
+                    setTimeout(() => {
+                        npcTeam[npcCurrentPokemon].hp = npcTeam[npcCurrentPokemon].hp - damage(playerTeam[playerCurrentPokemon],npcTeam[npcCurrentPokemon], playerMovChoosed);
+                    }, 2000);
+                    setTimeout(() => {
+                        if(npcTeam[npcCurrentPokemon].hp <= 0){
+                            npcCurrentPokemon = aliveOrNot(npcTeam, npcCurrentPokemon, 1000) ;
+                            if(aliveOrNot(npcTeam, npcCurrentPokemon, 1005) == 6){
+                                Swal.fire({
+                                    title: 'Ganaste el combate!',
+                                    width: 600,
+                                    padding: '3em',
+                                    color: '#716add',
+                                    background: '#fff url(/images/trees.png)',
+                                    backdrop: `
+                                        rgba(0,0,123,0.4)
+                                        url("https://i.pinimg.com/originals/8b/22/c2/8b22c2b446f9f539693c305d7e599ef6.gif")
+                                        left top
+                                        no-repeat
+                                    `
+                                })
+                            }
+                        }
+                    }, 3000);
+                }
+            }, 1000);
+        }
+        setTimeout(() => {
+            console.log(`el pokemon actual es ${npcTeam[npcCurrentPokemon].name}  current ${npcCurrentPokemon}`);
+        }, 4500);
+        setTimeout(() => {
+            console.log("Recargando la batalla ")
+            readyToStart = false;
+            ownTeamBattle();
+        }, 5000);
+        setTimeout(() => {
+            readyToStart = true;
+            ownTeamBattle();
+        }, 5500);
+}
 
 // Colapsar todos los elementos y mostrar la batalla pokemon
 function ownTeamBattle(){
     if(readyToStart==true){
-        let playerTeam = savedTeam;
-        let npcTeam = savedTeam;
         letsBattle();
         ownContainer.innerHTML = "";
         ownContainer.innerHTML += `
@@ -637,7 +767,8 @@ function ownTeamBattle(){
         let battleButtonsContainer = document.getElementById('battleButtons');
         let fightChoosed = document.getElementById('fightButton');
         let runChoosed = document.getElementById('runButton');
-
+        let chooseChoosed = document.getElementById('chooseButton');
+        // Elegir pelear
         fightChoosed.onclick = () => {
             document.getElementById('battleButtons').innerHTML = "";
             battleButtonsContainer.innerHTML += `
@@ -651,50 +782,23 @@ function ownTeamBattle(){
             let mov3 = document.getElementById('mov3');
             let mov4 = document.getElementById('mov4');
             mov1.onclick = () => {
-                //Si el jugador tiene mayor velocidad que el enemigo
-                if(playerTeam[playerCurrentPokemon].spd > npcTeam[npcCurrentPokemon].spd){
-                    battleOrder(playerTeam[playerCurrentPokemon], npcTeam[npcCurrentPokemon], playerTeam[playerCurrentPokemon].mov1, 1000);
-                    setTimeout(() => {
-                        npcCurrentPokemon = aliveOrNot(npcTeam, npcCurrentPokemon);
-                    }, 4000);
-                    setTimeout(() => {
-                        battleOrder(npcTeam[npcCurrentPokemon], playerTeam[playerCurrentPokemon], npcTeam[npcCurrentPokemon].mov1, 4000);
-                    }, 6000);
-                    
-                }
-                else{
-                    battleOrder(npcTeam[npcCurrentPokemon], playerTeam[playerCurrentPokemon], npcTeam[npcCurrentPokemon].mov1, 1000);
-                    setTimeout(() => {
-                        if(playerTeam[playerCurrentPokemon].hp <= 0){
-                            playerCurrentPokemon = aliveOrNot(playerTeam, playerCurrentPokemon);
-                        }
-                    }, 2000);
-                    setTimeout(() => {
-                        battleOrder(playerTeam[playerCurrentPokemon], npcTeam[npcCurrentPokemon], playerTeam[playerCurrentPokemon].mov1, 500);
-                    }, 3000);
-                    setTimeout(() => {
-                        if(npcTeam[npcCurrentPokemon].hp <= 0){
-                            setTimeout(() => {
-                                console.log(`nonononono npcCurrent ${npcCurrentPokemon}`);
-                            }, 10);
-                            npcCurrentPokemon = aliveOrNot(npcTeam, npcCurrentPokemon) ;
-                            
-                        }
-                    }, 7000);
-                }
-                setTimeout(() => {
-                    console.log(`el pokemon actual es ${npcTeam[npcCurrentPokemon].name}  current ${npcCurrentPokemon}`);
-                }, 12000);
-                setTimeout(() => {
-                    readyToStart = false;
-                    ownTeamBattle();
-                    readyToStart = true;
-                    ownTeamBattle();
-                    console.log("Soy inteligente jeje");
-                }, 13000);
-                
+                executingMov(playerTeam[playerCurrentPokemon].mov1, npcTeam[npcCurrentPokemon].mov1);
+                ownTeamBattle();
+            }
+            mov2.onclick = () => {
+                executingMov(playerTeam[playerCurrentPokemon].mov2, npcTeam[npcCurrentPokemon].mov2);
+                ownTeamBattle();
+            }
+            mov3.onclick = () => {
+                executingMov(playerTeam[playerCurrentPokemon].mov3, npcTeam[npcCurrentPokemon].mov3);
+                ownTeamBattle();
+            }
+            mov4.onclick = () => {
+                executingMov(playerTeam[playerCurrentPokemon].mov4, npcTeam[npcCurrentPokemon].mov4);
+                ownTeamBattle();
             }
         }
+        // Elegir escapar
         runChoosed.onclick = () => {
             const swalWithBootstrapButtons = Swal.mixin({
                 customClass: {
@@ -721,7 +825,10 @@ function ownTeamBattle(){
                         'Volviste al menu',
                         'success'
                     )
-                    location.reload();
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1500);
+                    
                 } else if (
                     /* Read more about handling dismissals below */
                     result.dismiss === Swal.DismissReason.cancel
@@ -734,6 +841,114 @@ function ownTeamBattle(){
                     
                 }
             })
+        }
+        //Elegir cambiar de pokemon
+        chooseChoosed.onclick = () => {
+            document.getElementById('battleButtons').innerHTML = "";
+            battleButtonsContainer.className = 'col-5 d-flex bd-highlight justify-content-center align-items-center flex-row flex-wrap'
+            let index = 1;
+            for (const creature of playerTeam) {
+                let pokemonCard = document.createElement('button');
+                pokemonCard.id = index;
+                index++ ;
+                pokemonCard.className = 'cardita poke-backgrounds d-flex flex-row flex-wrap p-2 bd-highlight justify-content-evenly align-items-center'
+                pokemonCard.innerHTML = `
+                    <h4 class="text">${creature.name}</h4>
+                    <img class="pokemon-img-pet" src=${creature.imgUrl}>
+                `
+                battleButtonsContainer.append(pokemonCard);
+            }
+            let pok1 = document.getElementById('1');
+            let pok2 = document.getElementById('2');
+            let pok3 = document.getElementById('3');
+            let pok4 = document.getElementById('4');
+            let pok5 = document.getElementById('5');
+            let pok6 = document.getElementById('6');
+            pok1.onclick = () => {
+                if(playerTeam[pok1.id - 1] == playerTeam[playerCurrentPokemon]){
+                    errorAlreadyBattling();
+                }
+                else{
+                    if(playerTeam[pok1.id-1].alive == true){
+                        playerCurrentPokemon = (pok1.id) - 1;
+                        pokeChange();
+                    }
+                    else{
+                        errorAlreadydefeated();
+                    }
+                }
+            }
+            pok2.onclick = () => {
+                if(playerTeam[pok2.id - 1] == playerTeam[playerCurrentPokemon]){
+                    errorAlreadyBattling();
+                }
+                else{
+                    if(playerTeam[pok2.id-1].alive == true){
+                        playerCurrentPokemon = (pok2.id) - 1;
+                        pokeChange();
+                    }
+                    else{
+                        errorAlreadydefeated();
+                    }
+                }
+            }
+            pok3.onclick = () => {
+                if(playerTeam[pok3.id - 1] == playerTeam[playerCurrentPokemon]){
+                    errorAlreadyBattling();
+                }
+                else{
+                    if(playerTeam[pok3.id-1].alive == true){
+                        playerCurrentPokemon = (pok3.id) - 1;
+                        pokeChange();
+                    }
+                    else{
+                        errorAlreadydefeated();
+                    }
+                }
+            }
+            pok4.onclick = () => {
+                if(playerTeam[pok4.id - 1] == playerTeam[playerCurrentPokemon]){
+                    errorAlreadyBattling();
+                }
+                else{
+                    if(playerTeam[pok4.id-1].alive == true){
+                        playerCurrentPokemon = (pok4.id) - 1;
+                        pokeChange();
+                    }
+                    else{
+                        errorAlreadydefeated();
+                    }
+                }
+            }
+            pok5.onclick = () => {
+                if(playerTeam[pok5.id - 1] == playerTeam[playerCurrentPokemon]){
+                    errorAlreadyBattling();
+                }
+                else{
+                    if(playerTeam[pok5.id-1].alive == true){
+                        playerCurrentPokemon = (pok5.id) - 1;
+                        pokeChange();
+                    }
+                    else{
+                        errorAlreadydefeated();
+                    }
+                }
+            }
+            pok6.onclick = () => {
+                if(playerTeam[pok6.id - 1] == playerTeam[playerCurrentPokemon]){
+                    errorAlreadyBattling();
+                }
+                else{
+                    if(playerTeam[pok6.id-1].alive == true){
+                        playerCurrentPokemon = (pok6.id) - 1;
+                        pokeChange();
+                    }
+                    else{
+                        errorAlreadydefeated();
+                    }
+                }
+            }
+
         }
     }
     else{

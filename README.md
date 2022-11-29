@@ -28,10 +28,15 @@ Principalmente agregué un sistema para poder hacer un equipo de 6 pokemon, aún
 -Escribi la tabla de tipos
 -Hice un contenedor para llevar a cabo los combates
 -Los elementos colapsan al iniciar la batalla y solo queda el contenedor de la batalla
-
-
 > 14/11/2022 01:07
 
+### Entrega final
+
+-El simulador de batalla pokemon funciona (tiene algunos bugs por la asincronia)
+-Agregué la función para cambiar de pokemon mientras combates
+-Añadí un segundo archivo HTML donde cree una pokedex utilizando el fetch
+-Agregue algunas animaciones
+> 29/11/2022 01:35
 
 ##### Este repositorio está siendo realizado por Kevin Cerón Escalante
 
